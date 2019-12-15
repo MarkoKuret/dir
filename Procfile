@@ -1,1 +1,1 @@
-web: gunicorn đir:đir
+web: gunicorn đir:app
