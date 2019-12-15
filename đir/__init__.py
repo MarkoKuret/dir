@@ -3,7 +3,7 @@ from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
 from tempfile import mkdtemp
 import locale
-
+import os
 
 # konfiguracije aplikacije
 app = Flask(__name__)
@@ -11,7 +11,7 @@ app.config["SECRET_KEY"] = "EsV5ClS1GHistLq6"
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config["SQLALCHEMY_DATABASE_URI"] =  "sqlite:///đir.db"
+app.config["SQLALCHEMY_DATABASE_URI"] =  os.environ['DATABASE_URL']
 db = SQLAlchemy(app)
 
 
