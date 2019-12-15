@@ -1,0 +1,60 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    - Korisnik/{{ korisnik.ime }}
+{% endblock %}
+
+{% block botun %}<a href="/odjava"><span>odjava</span></a>{% endblock %}
+
+{% block main %}
+<div class="kartice">
+			
+	<div class="korisnik_kartica">
+
+        <img id="korisnik_slika" class="okrugla_slika korisnik_element" src="/static/avatari/{{ korisnik.avatar }}">
+
+        <h2>{{ korisnik.ime }}</h2>
+       
+    </div>
+
+
+	
+	<h4 id="sudionik_botun">Sudionik</h4> <h4 id="objave_botun" class="ne_aktivno">Objave</h4> 
+    
+    <div  id="sudionik">
+        {% for objava in korisnik.sudionik %}
+            <a href="/objave/{{ objava.id }}" class="kartica povecaj">
+                    <div class="grad">{{ objava.mjesto }}</div>
+                    <div class="datum">{{ objava.datum.strftime("%a, %d.").capitalize() }}</div>
+                    <div class="sport">{{ objava.sport }}</div>
+                    <div class="vrijeme">{{ objava.datum.strftime("%H:%M") }}</div>
+            </a>
+        {% endfor %}
+    </div>
+
+    <div style="display:none;" id="objave">
+    	{% for objava in korisnik.objave %}
+            <a  href="/objave/{{ objava.id }}" class="kartica povecaj">
+                    <div class="grad">{{ objava.mjesto }}</div>
+                    <div class="datum">{{ objava.datum.strftime("%a, %d.").capitalize() }}</div>
+                    <div class="sport">{{ objava.sport }}</div>
+                    <div class="vrijeme">{{ objava.datum.strftime("%H:%M") }}</div>
+            </a>
+    	{% endfor %}
+    </div>
+</div>
+
+<script>
+    $("#objave_botun").click(function() {
+            $("#sudionik").hide();
+            $("#objave").show();
+            $("#sudionik_botun").addClass("ne_aktivno")
+            $(this).removeClass("ne_aktivno");});   
+
+    $("#sudionik_botun").click(function() {
+            $("#objave").hide();
+            $("#sudionik").show();
+            $("#objave_botun").addClass("ne_aktivno")
+            $(this).removeClass("ne_aktivno");});    
+</script>
+{% endblock %}

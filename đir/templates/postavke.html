@@ -1,0 +1,69 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    - Postavke
+{% endblock %}
+
+{% block botun %}<a href="/odjava"><span>odjava</span></a>{% endblock %}
+
+{% block main %}
+<div class="kartice">
+	
+		
+		<form class="korisnik_kartica" action="" method="POST" enctype="multipart/form-data">
+        {{ obrazac.hidden_tag() }}
+        <img id="korisnik_slika" class="okrugla_slika korisnik_element" src="/static/avatari/{{ korisnik.avatar }}">
+        <script>
+        	$("#korisnik_slika").click(function(){
+   				$('#avatar').click();});
+        </script>
+
+        {% if obrazac.avatar.errors %}
+                {{ obrazac.avatar (value="", autocomplete="off", placeholder="nevažeći format", class="korisnik_element upozorenje") }}
+        {% else %}
+            {{ obrazac.avatar (autocomplete="off", placeholder="Slika profila", class="korisnik_element") }}
+        {% endif %}
+
+        {% if obrazac.ime.errors %}
+            {% if "Zauzeto" in obrazac.ime.errors %}
+                {{ obrazac.ime (value="", autocomplete="off", placeholder="Zauzeto", class="korisnik_element upozorenje") }}
+            {% else %}
+                {{ obrazac.ime (value="", autocomplete="off", placeholder="3-20 znakova", class="korisnik_element upozorenje") }}
+            {% endif %}
+        {% else %}
+            {{ obrazac.ime (autocomplete="off", placeholder="Korisničko ime", class="korisnik_element") }}
+        {% endif %}
+
+        {% if obrazac.email.errors %}
+            {% if "Već registriran" in obrazac.email.errors %}
+                {{ obrazac.email (value="", autocomplete="off", placeholder="Već registriran", class="korisnik_element upozorenje") }}
+            {% else %}
+                {{ obrazac.email (value="", autocomplete="off", placeholder="nevažeće", class="korisnik_element upozorenje") }}
+            {% endif %}
+        {% else %}
+            {{ obrazac.email (autocomplete="off", placeholder="Email", class="korisnik_element") }}
+        {% endif %}
+
+       
+
+        {{ obrazac.submit (class="botun")}}
+
+        <script>
+        	        
+        	$("input").change(function() {
+  				$("#submit").val("Ažuriraj");});
+        </script>
+    </form>
+
+	
+	<h2>Moje objave: </h2>
+	{% for objava in korisnik.objave %}
+        <a href="/objave/{{ objava.id }}" class="kartica povecaj">
+                <div class="grad">{{ objava.mjesto }}</div>
+                <div class="datum">{{ objava.datum.strftime("%a, %d.").capitalize() }}</div>
+                <div class="sport">{{ objava.sport }}</div>
+                <div class="vrijeme">{{ objava.datum.strftime("%H:%M") }}</div>
+        </a>
+	{% endfor %}
+</div>
+{% endblock %}
