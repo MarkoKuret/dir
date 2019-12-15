@@ -29,3 +29,6 @@ locale.setlocale(locale.LC_ALL, "hr_HR.UTF-8")
 
 
 from đir import rute
+
+if __name__ == '__main__':
+    app.run()

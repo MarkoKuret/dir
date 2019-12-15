@@ -1,1 +1,1 @@
-web: gunicorn pokreni.py:app
+web: gunicorn đir:app
