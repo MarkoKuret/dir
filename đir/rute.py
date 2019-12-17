@@ -126,12 +126,15 @@ def objava(id):
         obrazac.opis.data = objava.opis
     return render_template('objava.html', objava=objava, obrazac = obrazac, naslov="Uredi")
 
-@app.route("/novi_sudionik/<int:id>")
+@app.route("/sudionik/<int:id>/<int:status>")
 @potrebna_prijava
-def novi_sudionik(id):
+def sudionik(id, status):
     objava = Objava.query.get(id)
-    korisnik = Korisnik.query.get(session.get("korisnik_id")) 
-    objava.sudionici.append(korisnik)
+    korisnik = Korisnik.query.get(session.get("korisnik_id"))
+    if status == 0:
+        objava.sudionici.remove(korisnik)
+    else: 
+        objava.sudionici.append(korisnik)
     db.session.commit()
     return redirect(request.referrer)
 

@@ -29,7 +29,8 @@
 	<a href="#prozor_izbriši" rel="modal:open"><img class="mali_botun" src="/static/slike/kanta.svg" alt="Koš za smeće"><img></a>
 	<a href="#prozor_uredi" rel="modal:open"><img class="mali_botun" src="/static/slike/olovka.svg" alt="Olovka"><img></a>
 {% else %}
-  <a href="/novi_sudionik/{{ objava.id }}"><img class="mali_botun v" src="/static/slike/dodaj.svg" alt="sudjeluj"><img></a>
+  <a id="sudjeluj_botun" href="/sudionik/{{ objava.id }}/1"><img class="mali_botun v" src="/static/slike/dodaj.svg" alt="sudjeluj"><img></a>
+  <a style="display: none;" id="ne_sudjeluj_botun" href="/sudionik/{{ objava.id }}/0"><img class="mali_botun v" src="/static/slike/ukloni.svg" alt="sudjeluj"><img></a>
 {% endif %}
 
 <p>	<strong>Opis:</strong> {{ objava.opis }}</p>
@@ -37,8 +38,14 @@
 
 {% if objava.sudionici|length != 0 %}
   <p> <strong>Sudionici:</strong>
-    {% for sudionik in objava.sudionici %}
-      <a href="/korisnik/{{ sudionik.id }}">{{ sudionik.ime }}</a>
+    {% for sudionik in objava.sudionici %}    
+      {% if sudionik.id == session.get("korisnik_id") %}
+        <script type="text/javascript">
+          $("#sudjeluj_botun").hide()
+          $("#ne_sudjeluj_botun").show()
+        </script>
+      {% endif %}
+      <a href="/korisnik/{{ sudionik.id }}">{{ sudionik.ime }}</a>     
     {% endfor %}</p>
 {% endif %}
 

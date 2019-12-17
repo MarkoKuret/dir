@@ -11,7 +11,8 @@ app.config["SECRET_KEY"] = "EsV5ClS1GHistLq6"
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config["SQLALCHEMY_DATABASE_URI"] =  'postgres://eiejqpoxnoymrt:ab40bdba72afe8e5a8b547bd77debbac639ed8ad0840f55c160667511b24409d@ec2-174-129-255-91.compute-1.amazonaws.com:5432/dft1sn2094ltj8'
+app.config["SQLALCHEMY_DATABASE_URI"] =  'sqlite:///đir.db'
+#'postgres://eiejqpoxnoymrt:ab40bdba72afe8e5a8b547bd77debbac639ed8ad0840f55c160667511b24409d@ec2-174-129-255-91.compute-1.amazonaws.com:5432/dft1sn2094ltj8'
 db = SQLAlchemy(app)
 
 

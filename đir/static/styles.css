@@ -103,13 +103,11 @@ small a {
     background-repeat: no-repeat;
 }
 
-.mali_botun.v{
-    padding: 5px;
-    max-width: 40px;
-
+.mali_botun.v {
+    max-width: 50px;
     border-radius: 50%; 
-    background-color: #9fbfff;
 }
+
 .okrugla_slika {
     border-radius: 50%;
     height: calc(30px + 2em);
@@ -370,11 +368,11 @@ body{
     }
     .kartice{
         margin-top: 50px;
-        width: 50%;
+        width: 55%;
     }
     .događaj{
         float:right;
-        width: 50%;            
+        width: 45%;            
     }
 }
 
