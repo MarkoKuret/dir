@@ -4,7 +4,7 @@ from đir.modeli import Korisnik, Objava
 from đir.obrasci import Registracija, Prijava, ObjavaObrazac, Uredi
 from werkzeug.security import check_password_hash, generate_password_hash
 from functools import wraps
-from datetime import datetime
+from datetime import datetime, date, timedelta
 from PIL import Image, ExifTags
 
 
@@ -57,7 +57,10 @@ def spremi(slika, korisnik, stari_avatar):
 
     return avatar
 
-
+def selektiraj():
+    dat = (date.today() - timedelta(hours=1))
+    objave = Objava.query.filter(Objava.datum >= dat).order_by(Objava.datum).all()
+    return objave
 
 @app.route("/", methods=["GET"])
 def index():
@@ -103,7 +106,8 @@ def objave():
         flash('Kreirano', 'dobro')
 
         #return  render_template("objave.html", obrazac=obrazac, objave=objave)
-    objave = Objava.query.all()
+
+    objave = selektiraj()
     avatar = Korisnik.query.get(session.get("korisnik_id")).avatar
     return render_template("objave.html", obrazac=obrazac, objave=objave, naslov="Novi događaj", avatar=avatar)
 
