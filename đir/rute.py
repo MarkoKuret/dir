@@ -1,4 +1,4 @@
-from flask import render_template, request, session, flash, redirect
+from flask import render_template, request, session, flash, redirect, url_for
 from đir import app, db
 from đir.modeli import Korisnik, Objava
 from đir.obrasci import Registracija, Prijava, ObjavaObrazac, Uredi
@@ -104,7 +104,7 @@ def objave():
         db.session.add(objava)
         db.session.commit()
         flash('Kreirano', 'dobro')
-
+        return redirect(url_for('objave'))
         #return  render_template("objave.html", obrazac=obrazac, objave=objave)
 
     objave = selektiraj()

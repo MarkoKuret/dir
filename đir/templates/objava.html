@@ -33,21 +33,74 @@
   <a style="display: none;" id="ne_sudjeluj_botun" href="/sudionik/{{ objava.id }}/0"><img class="mali_botun v" src="/static/slike/ukloni.svg" alt="sudjeluj"><img></a>
 {% endif %}
 
-<p>	<strong>Opis:</strong> {{ objava.opis }}</p>
-<p>	<strong>Autor:</strong> <a href="/korisnik/{{ objava.admin.id }}">{{ objava.admin.ime }}</a></p>
+<div>
+  <p>	<strong>Opis:</strong> {{ objava.opis }}</p>
+  <p>	<strong>Autor:</strong> <a href="/korisnik/{{ objava.admin.id }}">{{ objava.admin.ime }}</a></p>
 
-{% if objava.sudionici|length != 0 %}
-  <p> <strong>Sudionici:</strong>
-    {% for sudionik in objava.sudionici %}    
-      {% if sudionik.id == session.get("korisnik_id") %}
-        <script type="text/javascript">
-          $("#sudjeluj_botun").hide()
-          $("#ne_sudjeluj_botun").show()
-        </script>
-      {% endif %}
-      <a href="/korisnik/{{ sudionik.id }}">{{ sudionik.ime }}</a>     
-    {% endfor %}</p>
-{% endif %}
+  {% if objava.sudionici|length != 0 %}
+    <p> <strong>Sudionici:</strong>
+      {% for sudionik in objava.sudionici %}    
+        {% if sudionik.id == session.get("korisnik_id") %}
+          <script type="text/javascript">
+            $("#sudjeluj_botun").hide()
+            $("#ne_sudjeluj_botun").show()
+          </script>
+        {% endif %}
+        <a href="/korisnik/{{ sudionik.id }}">{{ sudionik.ime }}</a>     
+      {% endfor %}</p>
+  {% endif %}
+</div>
 
+
+<div> 
+  
+ 
+     
+            <i id="por-otvori" class="material-icons">message</i>
+
+  
+  <div class="por-prozor">
+    <div class="por-vrh">
+      Poruke
+      <span class="por-zatvori"><i class="material-icons">close</i></span>
+    </div>
+
+      
+      <div class="por-lista">
+       
+       <div  class="por-oblak ja" style="">      <div class="por-autor">MarkoK</div>  <div class="por-text">qD</div>        </div>
+       <div class="por-oblak" style="">     <div class="por-autor">MarkoK</div>   <div class="por-text">qD</div>        </div>
+       <div  class="por-oblak" style="">      <div class="por-text">Kako bi mi trebali doć ako pada kiša. mENNI SE AUTO POKVARILO...</div>        </div>
+       <div  class="por-oblak" style="">      <div class="por-text">qD</div>        </div>
+       <div  class="por-oblak" style="">      <div class="por-text">qD</div>        </div>
+      
+      </div><!--chat-log -->
+   
+    <div class="chat-input">      
+      <form>
+        <input type="text" id="por-input" autocomplete="off" placeholder="Nova Poruka..."/>
+      <button type="submit" class="por-salji"><i class="material-icons">send</i></button>
+      </form>      
+  
+     </div>
+  </div>
+  
+</div>
+
+
+<script>
+
+
+  $("#por-otvori").click(function() {    
+    $("#por-otvori").toggle('scale');
+    $(".por-prozor").toggle('scale');
+  })
+  
+  $(".por-zatvori").click(function() {
+    $("#por-otvori").toggle('scale');
+    $(".por-prozor").toggle('scale');
+  })
+  
+</script>
 
 {% endblock %}
