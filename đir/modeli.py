@@ -5,6 +5,7 @@ spojka = db.Table("spojka",
     db.Column("objava_id", db.Integer, db.ForeignKey('objava.id'))
 )
 
+
 class Korisnik(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     ime = db.Column(db.String(20), unique=True, nullable=False)
@@ -12,6 +13,7 @@ class Korisnik(db.Model):
     lozinka = db.Column(db.Text, nullable=False)
     avatar = db.Column(db.String(20), nullable=False, default='avatar.svg')
     objave = db.relationship("Objava", backref="admin", lazy=True)
+    
     sudionik = db.relationship("Objava", secondary="spojka", backref="sudionici", lazy=True)
 
     def __repr__(self):
@@ -25,6 +27,13 @@ class Objava(db.Model):
     datum = db.Column(db.DateTime, nullable=False)
     opis = db.Column(db.Text, nullable=False)
     korisnik_id = db.Column(db.Integer, db.ForeignKey('korisnik.id'), nullable=False)
+    poruke = db.relationship('Poruka', backref="objava", lazy=True)
 
     def __repr__(self):
         return f"Korisnik('{self.sport}', '{self.mjesto}')"
+
+class Poruka(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    tekst = db.Column(db.String(177), nullable=False)
+    ime = db.Column(db.String(20), nullable=False)
+    objava_id = db.Column(db.Integer, db.ForeignKey('objava.id'), nullable=False)

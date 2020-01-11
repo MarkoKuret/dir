@@ -9,9 +9,12 @@
 {% block main %}
 <br>
 
+<script src="https://js.pusher.com/5.0/pusher.min.js"></script>
+
+
 <div class="kartica">
         <div class="grad">{{ objava.mjesto }}</div>
-        <div class="datum">{{ objava.datum.strftime("%B - %a, %d.").capitalize() }}</div>
+        <div class="datum">{{ objava.datum.strftime("%b - %a, %d.").capitalize() }}</div>
         <div class="sport">{{ objava.sport }}</div>
         <div class="vrijeme">{{ objava.datum.strftime("%H:%M") }}</div>
 </div>
@@ -25,9 +28,10 @@
           {% include 'obrazac_događaj.html' %}
 </div>
 
-{% if objava.admin.id == session.get("korisnik_id") %}
+{% if objava.admin.id == korisnik.id %}
 	<a href="#prozor_izbriši" rel="modal:open"><img class="mali_botun" src="/static/slike/kanta.svg" alt="Koš za smeće"><img></a>
 	<a href="#prozor_uredi" rel="modal:open"><img class="mali_botun" src="/static/slike/olovka.svg" alt="Olovka"><img></a>
+ 
 {% else %}
   <a id="sudjeluj_botun" href="/sudionik/{{ objava.id }}/1"><img class="mali_botun v" src="/static/slike/dodaj.svg" alt="sudjeluj"><img></a>
   <a style="display: none;" id="ne_sudjeluj_botun" href="/sudionik/{{ objava.id }}/0"><img class="mali_botun v" src="/static/slike/ukloni.svg" alt="sudjeluj"><img></a>
@@ -40,10 +44,11 @@
   {% if objava.sudionici|length != 0 %}
     <p> <strong>Sudionici:</strong>
       {% for sudionik in objava.sudionici %}    
-        {% if sudionik.id == session.get("korisnik_id") %}
+        {% if sudionik.id == korisnik.id %}
           <script type="text/javascript">
             $("#sudjeluj_botun").hide()
             $("#ne_sudjeluj_botun").show()
+        
           </script>
         {% endif %}
         <a href="/korisnik/{{ sudionik.id }}">{{ sudionik.ime }}</a>     
@@ -52,55 +57,92 @@
 </div>
 
 
-<div> 
-  
- 
-     
-            <i id="por-otvori" class="material-icons">message</i>
 
-  
+<div> 
+  <i id="por-otvori" class="material-icons por-botun">message</i>  
   <div class="por-prozor">
     <div class="por-vrh">
       Poruke
-      <span class="por-zatvori"><i class="material-icons">close</i></span>
+      <span class="por-zatvori por-botun"><i class="material-icons">close</i></span>
+    </div>
+    
+      <div id="por-lista"> 
+        <div class="por-oblak">      
+            <div class="por-autor">{{ objava.admin.ime }}</div>  
+            <div class="por-text">{{ objava.mjesto }}, <br> {{ objava.sport }} - {{ objava.datum.strftime("%A, %d. (%B) u %H:%M sati").capitalize() }}</div>
+          </div>
+        {% for poruka in poruke %}      
+          <div  class="por-oblak ja">      
+            <div class="por-autor">{{ poruka.ime }}</div>  
+            <div class="por-text">{{ poruka.tekst }}</div>
+          </div>
+        {% endfor %}
+      </div>
+    
+    <div>      
+        <input id="por-input" autocomplete="off" placeholder="Nova Poruka..."/>
+        <button id="por-salji"><i class="material-icons">send</i></button>      
     </div>
 
-      
-      <div class="por-lista">
-       
-       <div  class="por-oblak ja" style="">      <div class="por-autor">MarkoK</div>  <div class="por-text">qD</div>        </div>
-       <div class="por-oblak" style="">     <div class="por-autor">MarkoK</div>   <div class="por-text">qD</div>        </div>
-       <div  class="por-oblak" style="">      <div class="por-text">Kako bi mi trebali doć ako pada kiša. mENNI SE AUTO POKVARILO...</div>        </div>
-       <div  class="por-oblak" style="">      <div class="por-text">qD</div>        </div>
-       <div  class="por-oblak" style="">      <div class="por-text">qD</div>        </div>
-      
-      </div><!--chat-log -->
-   
-    <div class="chat-input">      
-      <form>
-        <input type="text" id="por-input" autocomplete="off" placeholder="Nova Poruka..."/>
-      <button type="submit" class="por-salji"><i class="material-icons">send</i></button>
-      </form>      
-  
-     </div>
   </div>
-  
 </div>
 
 
 <script>
 
+$(function() {
 
-  $("#por-otvori").click(function() {    
+  let ime = "ime";
+  let poruka = "poruka"
+  let id = '{{ objava.id }}'
+
+  $('#por-salji').on('click', function(){
+    
+    let ime = "{{ korisnik.ime }}"
+    let poruka = $('#por-input').val();
+
+    if (poruka.length > 0) {         
+      $.post('/poruka', {'ime' : ime, 'poruka' : poruka, 'id' : id}, function() {
+        $('#por-input').val(null);
+      });
+    }
+  });
+  
+
+    // Enable pusher logging - don't include this in production
+  Pusher.logToConsole = true;
+
+  var pusher = new Pusher('43251c740e8c7fdc4747', {
+    cluster: 'eu',
+    forceTLS: true
+  });
+
+  var channel = pusher.subscribe('poruka-kanal'+id);
+  channel.bind('nova-poruka', function(data) {
+    let ime = data.ime;
+    let poruka = data.poruka;
+
+    let poruka_oblak = `<div  class="por-oblak ja">      
+                           <div class="por-autor">${ime}</div>  
+                           <div class="por-text">${poruka}</div>
+                       </div>`;
+    $('#por-lista').append(poruka_oblak)
+    $('#por-lista').scrollTop($('#por-lista')[0].scrollHeight);
+  });
+      
+});
+
+</script>
+
+<script>
+                               
+
+  $(".por-botun").click(function() {    
     $("#por-otvori").toggle('scale');
     $(".por-prozor").toggle('scale');
+    $('#por-lista').scrollTop($('#por-lista')[0].scrollHeight);
   })
-  
-  $(".por-zatvori").click(function() {
-    $("#por-otvori").toggle('scale');
-    $(".por-prozor").toggle('scale');
-  })
-  
+
 </script>
 
 {% endblock %}

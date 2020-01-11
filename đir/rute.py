@@ -1,11 +1,21 @@
-from flask import render_template, request, session, flash, redirect, url_for
+from flask import render_template, request, session, flash, redirect, url_for, jsonify
 from đir import app, db
-from đir.modeli import Korisnik, Objava
+from đir.modeli import Korisnik, Objava, Poruka
 from đir.obrasci import Registracija, Prijava, ObjavaObrazac, Uredi
 from werkzeug.security import check_password_hash, generate_password_hash
 from functools import wraps
 from datetime import datetime, date, timedelta
 from PIL import Image, ExifTags
+import pusher
+
+pusher_client = pusher.Pusher(
+  app_id='930370',
+  key='43251c740e8c7fdc4747',
+  secret='6cc68633eec00ebf9b9d',
+  cluster='eu',
+  ssl=True
+)
+
 
 
 @app.after_request
@@ -116,6 +126,8 @@ def objave():
 def objava(id):
     obrazac = ObjavaObrazac()
     objava = Objava.query.get(id)
+    poruke = Poruka.query.filter_by(objava_id=id)
+    
     if obrazac.validate_on_submit():
         objava.sport = obrazac.sport.data
         objava.mjesto = obrazac.mjesto.data
@@ -128,7 +140,32 @@ def objava(id):
         obrazac.mjesto.data = objava.mjesto
         obrazac.datum.data = objava.datum
         obrazac.opis.data = objava.opis
-    return render_template('objava.html', objava=objava, obrazac = obrazac, naslov="Uredi")
+    return render_template('objava.html', poruke=poruke, objava=objava, obrazac=obrazac, naslov="Uredi", korisnik=Korisnik.query.get(session.get("korisnik_id")))
+
+
+@app.route('/poruka', methods=['POST'])
+@potrebna_prijava
+def poruka():
+
+    try:
+
+        ime = request.form.get('ime')
+        poruka = request.form.get('poruka')
+        id = request.form.get('id')
+
+        nova_poruka = Poruka(tekst=poruka, ime=ime, objava_id=id)
+        db.session.add(nova_poruka)
+        db.session.commit()
+
+        pusher_client.trigger('poruka-kanal'+id, 'nova-poruka', {'poruka': poruka, 'ime': ime})
+
+        return jsonify({'result' : 'success'})
+    
+    except:
+
+        return jsonify({'result' : 'failure'})
+
+    return ''
 
 @app.route("/sudionik/<int:id>/<int:status>")
 @potrebna_prijava

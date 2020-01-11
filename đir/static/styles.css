@@ -239,7 +239,7 @@ h3{
 
 .kartica{
     display: grid;
-    grid-template-columns: 70%  30%;
+    grid-template-columns: auto  auto;
     grid-template-rows: auto auto;
     margin: 15px 15px 15px 0px;
     border-radius: 60px;
@@ -302,8 +302,8 @@ input[type=file]{
   position: fixed;
   cursor: pointer;
   border-radius: 50%;
-  bottom: 50px;
-  right: 50px;
+  bottom: 0.5em;
+  right: 0.5em;
   background: #434343;
   color: white;
   width: 45px;
@@ -317,8 +317,8 @@ input[type=file]{
   overflow: hidden;
   font-size: 20px;
   position:fixed;
-  right: 50px;
-  bottom: 50px;  
+  right: 10px;
+  bottom: 10px;  
   width: 400px;
   max-width: 80vw;
   max-height: 80vh;
@@ -335,6 +335,7 @@ input[type=file]{
   margin-right: 15px;
   
 }
+
 .por-vrh {
   background: #434343;
   color: white;
@@ -358,7 +359,7 @@ input[type=file]{
 }
 
 
-.por-salji {  
+#por-salji {  
   position: absolute;
   bottom: 10px;
   right: 10px;
@@ -370,21 +371,19 @@ input[type=file]{
   color:#434343; 
 }
 
-.por-lista {
+#por-lista {
   padding: 15px; 
   height: 330px;
   overflow-y:scroll;
 }
 
-
-
-.por-lista::-webkit-scrollbar
+#por-lista::-webkit-scrollbar
 {
     width: 5px;  
     background-color: #F5F5F5;
 }
 
-.por-lista::-webkit-scrollbar-thumb
+#por-lista::-webkit-scrollbar-thumb
 {
     background-color: #434343;
 }
@@ -392,7 +391,7 @@ input[type=file]{
 
 
 @media only screen and (max-width: 500px) {
-   .por-lista {
+   #por-lista {
         height:40vh;
     }
 }
