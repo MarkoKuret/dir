@@ -4,7 +4,8 @@
 
 body {
     padding-left: 5px;
-    height: 100vh;
+    padding-right: 5px;
+    height: 100%;
     font-size: 5vmin;
     font-family: 'Montserrat', sans-serif;
     color: #434343;
@@ -17,6 +18,9 @@ body {
     width: 80%;
 }
 
+.index{
+  height: 100vh !important;
+}
 
 /*-----tekst-------*/
 h1 {
@@ -49,6 +53,7 @@ small {
     color: gray;
     display: block;
 }
+
 
 /*---botuni, poruke, ikone i linkovi------*/
 
@@ -118,8 +123,9 @@ small a {
 }
 
 .modal{
-    padding: 15px 2px;
+    padding: 15px 15px;
 }
+
 
 /*------navigacijska traka--------*/
 
@@ -174,6 +180,7 @@ nav a span{
 }
 
 .element{
+    -webkit-appearance: none;
     display: block;
     border-radius: 50px;
     border-color: #434343;
@@ -183,7 +190,6 @@ nav a span{
     margin: 1.5em auto;
 }
 
-
 #opis{
     resize: none;
     height: 200%;
@@ -192,6 +198,7 @@ nav a span{
 .birac_datuma{
     -webkit-appearance: none;
 }
+
 
 .obrazac_događaj{
     -webkit-animation: spusti 0.5s ease-in-out ;
@@ -237,15 +244,16 @@ h3{
 /*-----kartice--------*/
 
 
+
 .kartica{
     display: grid;
-    grid-template-columns: auto  auto;
+    grid-template-columns: auto auto;
     grid-template-rows: auto auto;
-    margin: 15px 15px 15px 0px;
+    margin: 15px auto 15px auto;
     border-radius: 60px;
     color: white;
     font-weight: 600;
-    padding: 10px 0px 10px 30px;  
+    padding: 10px 30px 10px 30px;  
 }
 
 .korisnik_kartica{
@@ -296,7 +304,27 @@ input[type=file]{
 
 }
 
+
+/*--filter lista--*/
+
+select{
+  -webkit-appearance: none;
+    border-radius: 50px;
+    border-color: #434343;
+    text-align: center;
+    font-size: 20px;
+    height: 25px;
+    margin: 10px 15px;
+    background-color: white;
+}
+
+#filter_lista{
+  cursor: pointer;
+}
+
+
 /*-------kartice za poruke-------*/
+
 
 #por-otvori {
   position: fixed;

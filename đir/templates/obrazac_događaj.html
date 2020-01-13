@@ -6,21 +6,17 @@
 
                     {{ obrazac.sport (autocomplete="off", placeholder="Sport", class="element")}}
                     {% if obrazac.sport.errors %}
-                    <div>
                         <script>
                             $("[name='sport']").addClass("upozorenje").val("");
                         </script>
-                     </div>
                     {% endif %}
 
 
                     {{ obrazac.mjesto (placeholder="Mjesto", class="element")}}
                     {% if obrazac.mjesto.errors %}
-                    <div>
                         <script>
                             $("[name='mjesto']").addClass("upozorenje");
                         </script>
-                    </div>
                     {% endif %}
 
                     {{ obrazac.datum (autocomplete="off", placeholder="datum", class="element birac_datuma")}}
@@ -28,20 +24,16 @@
                          $("[name='datum']").attr("placeholder");
                     </script>
                     {% if obrazac.datum.errors %}
-                    <div>
                         <script>
                             $("[name='datum']").addClass("upozorenje");
                         </script>
-                     </div>
                     {% endif %}
 
                     {{ obrazac.opis (placeholder="Kratki opis", class="element")}}
                     {% if obrazac.opis.errors %}
-                    <div>
                         <script>
                             $("[name='opis']").addClass("upozorenje");
                         </script>
-                     </div>
                     {% endif %}
 
                     {{ obrazac.submit (class="botun")}}

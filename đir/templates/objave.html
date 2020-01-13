@@ -8,6 +8,9 @@
 
 {% block main %}
 
+
+
+
 <div class="kartice">
     {% for objava in objave %}
         <a href="/objave/{{ objava.id }}" class="kartica povecaj">
@@ -24,6 +27,7 @@
 {% endblock %}
 
 {% block header %}
+
 <div class="događaj">
     <h2 class="obrazac_botun otvori" >+ kreiraj događaj</h2>
     <h2 class="obrazac_botun zatvori">&times zatvori</h2>
@@ -32,6 +36,24 @@
         {% include 'obrazac_događaj.html' %}
     </div>
 </div>
+
+<div id="filter_lista">
+    <i id="ikona" class="material-icons">
+    filter_list
+    </i>
+    <div style="display: none" id='filter'>
+        <select>
+            <option value='ranije'>datum ranije</option>
+            <option value='kasnije'>datum kasnije</option>
+        </select>
+    </div>
+        <script>
+        $('#ikona').click(function() {
+            $('#filter').toggle('scale');
+        }); 
+        </script>
+</div>
+
 
 <script>
         $(".otvori").click(function() {
@@ -50,5 +72,6 @@
             $(".otvori").show();
             $("main").show();
 });
+
 </script>
 {% endblock %}

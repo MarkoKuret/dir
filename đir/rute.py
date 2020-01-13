@@ -7,6 +7,7 @@ from functools import wraps
 from datetime import datetime, date, timedelta
 from PIL import Image, ExifTags
 import pusher
+import os
 
 pusher_client = pusher.Pusher(
   app_id='930370',
@@ -183,10 +184,15 @@ def sudionik(id, status):
 @potrebna_prijava
 def izbriši(id):
     objava = Objava.query.get(id)
+    poruke = Poruka.query.filter_by(objava_id=id).all()
     if objava.admin.id == session.get("korisnik_id"):
+        for poruka in poruke:
+            db.session.delete(poruka)
         db.session.delete(objava)
+
         db.session.commit()
         flash("Objava izbrisana", "dobro")
+
     return redirect("/")
 
 
