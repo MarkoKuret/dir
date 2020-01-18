@@ -1,0 +1,6 @@
+<a href="/objave/{{ objava.id }}" class="kartica povecaj">
+                <div class="grad">{{ objava.mjesto }}</div>
+                <div class="datum">{{ objava.datum.strftime("%a, %d.").capitalize() }}</div>
+                <div class="sport">{{ objava.sport }}</div>
+                <div class="vrijeme">{{ objava.datum.strftime("%H:%M") }}</div>
+</a>

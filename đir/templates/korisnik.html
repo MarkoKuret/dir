@@ -23,23 +23,13 @@
     
     <div  id="sudionik">
         {% for objava in korisnik.sudionik %}
-            <a href="/objave/{{ objava.id }}" class="kartica povecaj">
-                    <div class="grad">{{ objava.mjesto }}</div>
-                    <div class="datum">{{ objava.datum.strftime("%a, %d.").capitalize() }}</div>
-                    <div class="sport">{{ objava.sport }}</div>
-                    <div class="vrijeme">{{ objava.datum.strftime("%H:%M") }}</div>
-            </a>
+            {% include 'objava_kartica.html' %}
         {% endfor %}
     </div>
 
     <div style="display:none;" id="objave">
     	{% for objava in korisnik.objave %}
-            <a  href="/objave/{{ objava.id }}" class="kartica povecaj">
-                    <div class="grad">{{ objava.mjesto }}</div>
-                    <div class="datum">{{ objava.datum.strftime("%a, %d.").capitalize() }}</div>
-                    <div class="sport">{{ objava.sport }}</div>
-                    <div class="vrijeme">{{ objava.datum.strftime("%H:%M") }}</div>
-            </a>
+            {% include 'objava_kartica.html' %}
     	{% endfor %}
     </div>
 </div>

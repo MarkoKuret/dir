@@ -114,9 +114,12 @@ def objave():
         objava = Objava(sport=obrazac.sport.data, mjesto=obrazac.mjesto.data, datum=datum, opis=obrazac.opis.data, korisnik_id=session["korisnik_id"])
         db.session.add(objava)
         db.session.commit()
+        datum = objava.datum.strftime("%a, %d.").capitalize()
+        sat = objava.datum.strftime("%H:%M")
+        pusher_client.trigger('objava-kanal', 'nova-objava', {'sport': objava.sport, 'mjesto': objava.mjesto, 'datum': datum, 'sat': sat, 'id': objava.id})
         flash('Kreirano', 'dobro')
         return redirect(url_for('objave'))
-        #return  render_template("objave.html", obrazac=obrazac, objave=objave)
+        
 
     objave = selektiraj()
     avatar = Korisnik.query.get(session.get("korisnik_id")).avatar

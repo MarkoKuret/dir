@@ -15,21 +15,9 @@
 
  
 
-
-
-
-
-
-
-
 <div class="kartice">
     {% for objava in objave %}
-        <a href="/objave/{{ objava.id }}" class="kartica povecaj">
-                <div class="grad">{{ objava.mjesto }}</div>
-                <div class="datum">{{ objava.datum.strftime("%a, %d.").capitalize() }}</div>
-                <div class="sport">{{ objava.sport }}</div>
-                <div class="vrijeme">{{ objava.datum.strftime("%H:%M") }}</div>
-        </a>
+        {% include 'objava_kartica.html' %}
     {% endfor %}
 </div>
 
@@ -78,8 +66,35 @@ google.maps.event.addDomListener(window, 'load', lokacija);
 
 </div>
 
+<script>
+  var pusher = new Pusher('43251c740e8c7fdc4747', {
+    cluster: 'eu',
+    forceTLS: true
+  });
+
+  var kanal = pusher.subscribe('objava-kanal');
+  kanal.bind('nova-objava', function(data) {
+    let sport = data.sport;
+    let mjesto = data.mjesto;
+    let datum = data.datum;
+    let id = data.id
+    let sat = data.sat
+    
+    let objava_kartica = `<a href="/objave/${id}" class="kartica povecaj poz1">
+                <div class="grad">${mjesto}</div>
+                <div class="datum">${datum}</div>
+                <div class="sport">${sport}</div>
+                <div class="vrijeme">${sat}</div>
+</a>`;
+    
+    $('.kartice').append(objava_kartica)
+  }); 
+
+</script>
 
 <script>
+     
+
         $(".otvori").click(function() {
             $(".obrazac_događaj").show()
             $(this).hide();
@@ -96,6 +111,6 @@ google.maps.event.addDomListener(window, 'load', lokacija);
             $(".otvori").show();
             $("main").show();
 });
-
 </script>
+
 {% endblock %}

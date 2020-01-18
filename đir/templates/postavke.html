@@ -55,15 +55,33 @@
         </script>
     </form>
 
+    <h4 id="objave_botun">Moje objave:</h4> <h4 id="sudionik_botun" class="ne_aktivno">Sudionik: </h4> 
 	
-	<h2>Moje objave: </h2>
-	{% for objava in korisnik.objave %}
-        <a href="/objave/{{ objava.id }}" class="kartica povecaj">
-                <div class="grad">{{ objava.mjesto }}</div>
-                <div class="datum">{{ objava.datum.strftime("%a, %d.").capitalize() }}</div>
-                <div class="sport">{{ objava.sport }}</div>
-                <div class="vrijeme">{{ objava.datum.strftime("%H:%M") }}</div>
-        </a>
-	{% endfor %}
+	<div id="objave">
+    	{% for objava in korisnik.objave %}
+            {% include 'objava_kartica.html' %}
+    	{% endfor %}
+    </div>
+
+    <div id="sudionik" style="display: none;">    
+        {% for objava in korisnik.sudionik %}
+            {% include 'objava_kartica.html' %}
+        {% endfor %}
+    </div>
+
+    <script>
+    $("#objave_botun").click(function() {
+            $("#sudionik").toggle();
+            $("#objave").toggle();
+            $("#sudionik_botun").addClass("ne_aktivno")
+            $(this).removeClass("ne_aktivno");});   
+
+    $("#sudionik_botun").click(function() {
+            $("#objave").toggle();
+            $("#sudionik").toggle();
+            $("#objave_botun").addClass("ne_aktivno")
+            $(this).removeClass("ne_aktivno");});    
+    </script>
+
 </div>
 {% endblock %}
