@@ -1,13 +1,14 @@
 from flask import render_template, request, session, flash, redirect, url_for, jsonify
-from đir import app, db
+from đir import app, db, mail
 from đir.modeli import Korisnik, Objava, Poruka
-from đir.obrasci import Registracija, Prijava, ObjavaObrazac, Uredi
+from đir.obrasci import Registracija, Prijava, ObjavaObrazac, Uredi, Zaboravljena_lozinka, Nova_lozinka
 from werkzeug.security import check_password_hash, generate_password_hash
 from functools import wraps
 from datetime import datetime, date, timedelta
 from PIL import Image, ExifTags
 import pusher
 import os
+from flask_mail import Message
 
 pusher_client = pusher.Pusher(
   app_id='930370',
@@ -16,7 +17,6 @@ pusher_client = pusher.Pusher(
   cluster='eu',
   ssl=True
 )
-
 
 
 @app.after_request
@@ -174,8 +174,10 @@ def sudionik(id, status):
     objava = Objava.query.get(id)
     korisnik = Korisnik.query.get(session.get("korisnik_id"))
     if status == 0:
+        pusher_client.trigger('sudionik-kanal', 'promjena-sudionika', {'id': korisnik.id, 'ime': korisnik.ime, 'status': 0})
         objava.sudionici.remove(korisnik)
     else: 
+        pusher_client.trigger('sudionik-kanal', 'promjena-sudionika', {'id': korisnik.id, 'ime': korisnik.ime, 'status': 1})
         objava.sudionici.append(korisnik)
     db.session.commit()
     return redirect(request.referrer)
@@ -227,6 +229,44 @@ def prijava():
         flash("nevažeći email ili lozinka", 'ne_dobro')
     return render_template('prijava.html', obrazac=obrazac)
 
+def posalji_mail(korisnik):
+    token = korisnik.nabavi_token()
+    poruka = Message('Promijena lozinke',
+                  sender='dirmreza@gmail.com',
+                  recipients=[korisnik.email])
+    poruka.body = f'''Ako želite promijeniti lozinku, kliknite na ovu poveznicu:
+{url_for('nova_lozinka', token=token, _external=True)}
+
+Ako poveznica nije radila, kopirajte i zeljepite je u vaš pretraživać.
+
+Ako vi niste zatražili novu lozinku ignorirajte ovaj email.
+'''
+    mail.send(poruka)
+
+@app.route("/zaboravljena_lozinka", methods=["GET", "POST"])
+def zaboravljena_lozinka():
+    
+    obrazac = Zaboravljena_lozinka()
+    if obrazac.validate_on_submit():
+        korisnik = Korisnik.query.filter_by(email=obrazac.email.data).first()
+        posalji_mail(korisnik)
+        flash('Email za promijeniti lozinku vam je poslan', 'dobro')
+        return redirect('/prijava')
+    return render_template("zaboravljena_lozinka.html", obrazac=obrazac)
+
+@app.route("/nova_lozinka/<token>", methods=["GET", "POST"])
+def nova_lozinka(token):
+    korisnik = Korisnik.potvrdi_token(token)
+    if korisnik is None:
+        flash('Nevažeća poveznica', 'ne_dobro')
+        return redirect('/')
+    obrazac = Nova_lozinka()
+    if obrazac.validate_on_submit():
+        korisnik.lozinka = generate_password_hash(obrazac.lozinka.data)
+        db.session.commit()
+        flash('Uspiješno ste promijenili lozinku', 'dobro')
+        return redirect('/prijava')
+    return render_template('nova_lozinka.html', obrazac=obrazac)
 
 @app.route("/odjava")
 def odjava():

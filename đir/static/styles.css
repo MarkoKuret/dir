@@ -60,6 +60,7 @@ small {
 a {
     -webkit-appearance: none;
     text-decoration: none;
+    color: black;
 }
 
 small a {
@@ -126,6 +127,11 @@ small a {
     padding: 15px 15px;
 }
 
+#nema_sud{
+  color: #F36B7F;
+  display: inline;
+  font-size: 25px;
+}
 
 /*------navigacijska traka--------*/
 
@@ -247,7 +253,7 @@ h3{
 
 .kartica{
     display: grid;
-    grid-template-columns: auto auto;
+    grid-template-columns: 70% 30%;
     grid-template-rows: auto auto;
     margin: 15px auto 15px auto;
     border-radius: 60px;
@@ -301,9 +307,7 @@ input[type=file]{
 
 .vrijeme, .datum{
     text-align: center;
-
 }
-
 
 /*--filter lista--*/
 
@@ -313,9 +317,10 @@ select{
     border-color: #434343;
     text-align: center;
     font-size: 20px;
-    height: 25px;
-    margin: 10px 15px;
+    height: 30px;
+    margin: 5px 15px;
     background-color: white;
+    padding: 5px 10px;
 }
 
 #filter_lista{

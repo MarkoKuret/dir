@@ -41,8 +41,8 @@
   <p>	<strong>Opis:</strong> {{ objava.opis }}</p>
   <p>	<strong>Autor:</strong> <a href="/korisnik/{{ objava.admin.id }}">{{ objava.admin.ime }}</a></p>
 
+  <div id="sudionici"> <strong>Sudionici:</strong>
   {% if objava.sudionici|length != 0 %}
-    <p> <strong>Sudionici:</strong>
       {% for sudionik in objava.sudionici %}    
         {% if sudionik.id == korisnik.id %}
           <script type="text/javascript">
@@ -51,8 +51,10 @@
         
           </script>
         {% endif %}
-        <a href="/korisnik/{{ sudionik.id }}">{{ sudionik.ime }}</a>     
-      {% endfor %}</p>
+        <a id="{{ sudionik.id }}" href="/korisnik/{{ sudionik.id }}">{{ sudionik.ime }}</a>     
+      {% endfor %}</div>
+  {% else %}
+  <p id="nema_sud">nema sudionika</p></div>
   {% endif %}
 </div>
 
@@ -107,18 +109,15 @@ $(function() {
       });
     }
   });
-  
-
-    // Enable pusher logging - don't include this in production
-  Pusher.logToConsole = true;
+ 
 
   var pusher = new Pusher('43251c740e8c7fdc4747', {
     cluster: 'eu',
     forceTLS: true
   });
 
-  var channel = pusher.subscribe('poruka-kanal'+id);
-  channel.bind('nova-poruka', function(data) {
+  var kanal = pusher.subscribe('poruka-kanal'+id);
+  kanal.bind('nova-poruka', function(data) {
     let ime = data.ime;
     let poruka = data.poruka;
 
@@ -128,11 +127,39 @@ $(function() {
                        </div>`;
     $('#por-lista').append(poruka_oblak)
     $('#por-lista').scrollTop($('#por-lista')[0].scrollHeight);
-  });
+  }); 
+
+  var kanal2 = pusher.subscribe('sudionik-kanal');
+  kanal2.bind('promjena-sudionika', function(data) {
+    let ime = data.ime;
+    let id = data.id;
+    let status = data.status;
+
+    if (status == 1){
+      let korisnik = `<a id="${id}" href="/korisnik/${id}">${ime}</a></p>`;
+      if ({{ objava.sudionici }}.length == 0){
+        $('#nema_sud').hide()
+      }
+      $('#sudionici').append(korisnik)
+      $('#por-lista').append(`<div  class="por-oblak">      
+                           <div class="por-autor">đir.com</div>  
+                           <div class="por-text">Korisnik ${ime} se pridružio</div>
+                       </div>`)
+      $('#por-lista').scrollTop($('#por-lista')[0].scrollHeight);
+    }
+    else {
+      var makni = $("#sudionici").find(`#${id}`)
+      makni.remove()
+      if ({{ objava.sudionici }}.length == 0){
+        $('#nema_sud').show()}
+    }
+  }); 
       
 });
 
 </script>
+
+
 
 <script>
                                

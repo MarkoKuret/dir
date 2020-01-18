@@ -1,4 +1,5 @@
-from đir import db
+from đir import db, app
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
 spojka = db.Table("spojka", 
     db.Column("korisnik_id", db.Integer, db.ForeignKey('korisnik.id')),
@@ -13,8 +14,21 @@ class Korisnik(db.Model):
     lozinka = db.Column(db.Text, nullable=False)
     avatar = db.Column(db.String(20), nullable=False, default='avatar.svg')
     objave = db.relationship("Objava", backref="admin", lazy=True)
-    
     sudionik = db.relationship("Objava", secondary="spojka", backref="sudionici", lazy=True)
+
+    def nabavi_token(self, trajanje=2000):
+        t = Serializer(app.config['SECRET_KEY'], trajanje)
+        return t.dumps({'korisnik_id': self.id}).decode('utf-8')
+
+    @staticmethod
+    def potvrdi_token(token):
+        t = Serializer(app.config['SECRET_KEY'])
+        try:
+            korisnik_id = t.loads(token)['korisnik_id']
+        except:
+            return None
+        
+        return Korisnik.query.get(korisnik_id)
 
     def __repr__(self):
         return f"Korisnik('{self.ime}', '{self.email}')"

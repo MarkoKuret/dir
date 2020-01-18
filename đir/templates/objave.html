@@ -9,6 +9,17 @@
 {% block main %}
 
 
+<head>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDIJd5CHJ91wuCM5Id5QMmp-cZcj4a2L5s&libraries=places"></script>
+</head>
+
+ 
+
+
+
+
+
+
 
 
 <div class="kartice">
@@ -22,7 +33,18 @@
     {% endfor %}
 </div>
 
+<script>
+function lokacija() {
+       
+var i;
+    for (i = 0; i < 2; i++) {
+        var input = $('.mjesto_input')[i];
+        new google.maps.places.Autocomplete(input, {types: ['(cities)'], componentRestrictions: {country: 'hr'}});
+    }
+}
+google.maps.event.addDomListener(window, 'load', lokacija);
 
+</script>
 
 {% endblock %}
 
@@ -46,12 +68,14 @@
             <option value='ranije'>datum ranije</option>
             <option value='kasnije'>datum kasnije</option>
         </select>
+        <input class="mjesto_input" autocomplete="off" type="text">
     </div>
-        <script>
-        $('#ikona').click(function() {
-            $('#filter').toggle('scale');
-        }); 
-        </script>
+    <script>
+    $('#ikona').click(function() {
+        $('#filter').toggle('scale');
+    }); 
+    </script>
+
 </div>
 
 

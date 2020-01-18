@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    - zaboravljena lozinka
+{% endblock %}
+
+{% block botun %}<a href="/registracija"><span>nemaš račun?</span></a>{% endblock %}
+
+{% block main %}
+<div>
+    <form action="" method="post">
+        {{ obrazac.hidden_tag() }}
+        <fieldset class="obrazac">
+            <legend><h1>Promijeni lozinku</h1></legend>
+
+                {% if obrazac.email.errors %}
+                     {{ obrazac.email (value="", autocomplete="off", placeholder="Email nije registriran", class="element upozorenje") }}
+                {% else %}
+                    {{ obrazac.email (autocomplete="off", placeholder="Email", class="element")}}
+                {% endif %}
+
+                {{ obrazac.submit (class="botun velik")}}
+        </fieldset>
+
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    - nova lozinka
+{% endblock %}
+
+{% block botun %}<a href="/registracija"><span>nemaš račun?</span></a>{% endblock %}
+
+{% block main %}
+<div>
+    <form action="" method="post">
+        {{ obrazac.hidden_tag() }}
+        <fieldset class="obrazac">
+            <legend><h1>Nova Lozinka</h1></legend>
+
+                {{ obrazac.lozinka (placeholder="Lozinka", class="element")}}
+                {% if obrazac.lozinka.errors %}
+                    <script>
+                        $("[name='lozinka']").addClass("upozorenje");
+                    </script>
+                {% endif %}
+
+                {{ obrazac.potvrda (placeholder="Potvrda lozinke", class="element")}}
+                {% if obrazac.potvrda.errors %}
+                    <script>
+                        $("[name='potvrda']").addClass("upozorenje");
+                    </script>
+                {% endif %}
+
+                {{ obrazac.submit (class="botun")}}
+
+        </fieldset>
+
+    </form>
+</div>
+{% endblock %}

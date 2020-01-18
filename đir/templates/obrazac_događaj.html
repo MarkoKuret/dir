@@ -1,5 +1,5 @@
 
-<form action="" method="post">
+<form autocomplete="off" action="" method="post">
             {{ obrazac.hidden_tag() }}
             <fieldset class="obrazac">
                 <legend><h3>{{ naslov }}</h3></legend>
@@ -12,7 +12,7 @@
                     {% endif %}
 
 
-                    {{ obrazac.mjesto (placeholder="Mjesto", class="element")}}
+                    {{ obrazac.mjesto (placeholder="Mjesto", autocomplete="off", class="element mjesto_input")}}
                     {% if obrazac.mjesto.errors %}
                         <script>
                             $("[name='mjesto']").addClass("upozorenje");
