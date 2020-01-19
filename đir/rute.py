@@ -93,10 +93,22 @@ def postavke():
         korisnik.email = obrazac.email.data        
         db.session.commit()
         flash('Ažurirano', 'dobro')
+        return redirect(url_for('postavke'))
     if request.method == 'GET':
         obrazac.ime.data = korisnik.ime
         obrazac.email.data = korisnik.email
     return render_template("postavke.html", korisnik=korisnik, obrazac=obrazac)
+
+@app.route("/email_obavijest", methods=["POST"])
+def obavijesti():
+    korisnik = Korisnik.query.get(session.get("korisnik_id"))
+    obv = request.form.get("obv")
+    if obv == "1":
+        korisnik.eobv = True
+    else:
+        korisnik.eobv = False
+    db.session.commit()
+    return ''
 
 @app.route("/korisnik/<int:id>")
 @potrebna_prijava
@@ -120,7 +132,6 @@ def objave():
         flash('Kreirano', 'dobro')
         return redirect(url_for('objave'))
         
-
     objave = selektiraj()
     avatar = Korisnik.query.get(session.get("korisnik_id")).avatar
     return render_template("objave.html", obrazac=obrazac, objave=objave, naslov="Novi događaj", avatar=avatar)
@@ -163,11 +174,9 @@ def poruka():
 
         pusher_client.trigger('poruka-kanal'+id, 'nova-poruka', {'poruka': poruka, 'ime': ime})
 
-        return jsonify({'result' : 'success'})
-    
     except:
 
-        return jsonify({'result' : 'failure'})
+        return jsonify({'poruka' : 'greska'})
 
     return ''
 
@@ -179,11 +188,25 @@ def sudionik(id, status):
     if status == 0:
         pusher_client.trigger('sudionik-kanal', 'promjena-sudionika', {'id': korisnik.id, 'ime': korisnik.ime, 'status': 0})
         objava.sudionici.remove(korisnik)
+        if objava.admin.eobv == True:
+            sudionik_mail(korisnik, objava, 0)
     else: 
         pusher_client.trigger('sudionik-kanal', 'promjena-sudionika', {'id': korisnik.id, 'ime': korisnik.ime, 'status': 1})
         objava.sudionici.append(korisnik)
+        if objava.admin.eobv == True:
+            sudionik_mail(korisnik, objava, 1)
     db.session.commit()
     return redirect(request.referrer)
+
+def sudionik_mail(sudionik, objava, status):
+    poruka = Message('Novi sudionik',
+                  sender='dirmreza@gmail.com',
+                  recipients=[objava.admin.email])
+    if status == 1:
+        poruka.body = f'''Pridruzio vam se novi sudionik { sudionik.ime } na vaš događaj: {objava.sport} u {objava.mjesto}.'''
+    else:
+        poruka.body = f'''Korisnik { sudionik.ime } više nije sudionik vašeg događaja: {objava.sport} u {objava.mjesto}.'''
+    mail.send(poruka)
 
 @app.route("/izbriši/<int:id>")
 @potrebna_prijava
@@ -232,7 +255,7 @@ def prijava():
         flash("nevažeći email ili lozinka", 'ne_dobro')
     return render_template('prijava.html', obrazac=obrazac)
 
-def posalji_mail(korisnik):
+def lozinka_mail(korisnik):
     token = korisnik.nabavi_token()
     poruka = Message('Promijena lozinke',
                   sender='dirmreza@gmail.com',
@@ -252,7 +275,7 @@ def zaboravljena_lozinka():
     obrazac = Zaboravljena_lozinka()
     if obrazac.validate_on_submit():
         korisnik = Korisnik.query.filter_by(email=obrazac.email.data).first()
-        posalji_mail(korisnik)
+        lozinka_mail(korisnik)
         flash('Email za promijeniti lozinku vam je poslan', 'dobro')
         return redirect('/prijava')
     return render_template("zaboravljena_lozinka.html", obrazac=obrazac)

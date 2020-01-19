@@ -44,18 +44,45 @@
             {{ obrazac.email (autocomplete="off", placeholder="Email", class="korisnik_element") }}
         {% endif %}
 
-       
-
         {{ obrazac.submit (class="botun")}}
 
-        <script>
-        	        
+        <script> 	        
         	$("input").change(function() {
   				$("#submit").val("Ažuriraj");});
         </script>
-    </form>
 
-    <h4 id="objave_botun">Moje objave:</h4> <h4 id="sudionik_botun" class="ne_aktivno">Sudionik: </h4> 
+    </form>
+    
+
+    <label class="check">
+        <input id="check" value="zelim" type="checkbox"> Želim primati email obavijesti
+        <script>            
+            $("#check").change(function() {
+                var eobv = (this.checked) ? 1 : 0;
+                
+                if (eobv == 1) {
+                    $.post('/email_obavijest', {'obv' : 1})
+                }
+                else {
+                    $.post('/email_obavijest', {'obv' : 0})
+                }
+            })
+        </script>
+    </label>
+
+    <div>
+    {% if korisnik.eobv == True %}
+        <script> 
+            $("#check")[0].checked = true; 
+        </script>
+    {% else %}
+        <script>
+            $("#check")[0].checked = false;
+        </script>
+    {% endif %}
+    </div>
+
+    <h4 id="objave_botun">Moje objave </h4> <h4 id="sudionik_botun" class="ne_aktivno">Sudionik</h4> 
 	
 	<div id="objave">
     	{% for objava in korisnik.objave %}

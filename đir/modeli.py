@@ -13,6 +13,7 @@ class Korisnik(db.Model):
     email =  db.Column(db.String(120), unique=True, nullable=False)
     lozinka = db.Column(db.Text, nullable=False)
     avatar = db.Column(db.String(20), nullable=False, default='avatar.svg')
+    eobv = db.Column(db.Boolean, default=True, nullable=False)
     objave = db.relationship("Objava", backref="admin", lazy=True)
     sudionik = db.relationship("Objava", secondary="spojka", backref="sudionici", lazy=True)
 

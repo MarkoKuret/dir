@@ -170,11 +170,21 @@ nav a span{
 
 /*------obrazac---------*/
 
+.check {
+  display: block;
+  margin-top: 30px; 
+  font-size: 22px;
+}
+
+legend{
+  margin: auto;
+}
+
 .obrazac{
     display: block;
     margin: auto;
     padding: 0px;
-    text-align: center;
+    text-align: center !important;
     border: none;
     font-size: inherit;
     font-weight: 400;

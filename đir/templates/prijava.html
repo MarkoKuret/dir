@@ -11,35 +11,27 @@
     <form action="/prijava" method="post">
         {{ obrazac.hidden_tag() }}
         <fieldset class="obrazac">
-            <legend><h1>Prijava</h1></legend>
+            <legend><h3>Prijava</h3></legend>
 
                 {{ obrazac.email (autocomplete="off", placeholder="Email", class="element")}}
                 {% if obrazac.email.errors %}
-                <div>
                     <script>
                         $("[name='email']").addClass("upozorenje").val("");
                     </script>
-                 </div>
                 {% endif %}
 
 
                 {{ obrazac.lozinka (placeholder="Lozinka", class="element")}}
                 {% if obrazac.lozinka.errors %}
-                <div>
                     <script>
                         $("[name='lozinka']").addClass("upozorenje");
                     </script>
-                 </div>
                 {% endif %}
-                <div>
                 <small>
                     <a href='/zaboravljena_lozinka'>Zaboravljena lozinka?</a>
                 </small>
-                </div>
                 {{ obrazac.submit (class="botun velik")}}
-
         </fieldset>
-
     </form>
 </div>
 {% endblock %}

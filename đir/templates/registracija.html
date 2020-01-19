@@ -11,7 +11,7 @@
     <form action="" method="POST">
         {{ obrazac.hidden_tag() }}
         <fieldset class="obrazac">
-            <legend><h1>Registracija</h1></legend>
+            <legend><h3>Registracija</h3></legend>
 
                 {% if obrazac.ime.errors %}
                     {% if "Zauzeto" in obrazac.ime.errors %}
@@ -35,26 +35,19 @@
 
                 {{ obrazac.lozinka (placeholder="Lozinka", class="element")}}
                 {% if obrazac.lozinka.errors %}
-                <div>
                     <script>
                         $("[name='lozinka']").addClass("upozorenje");
                     </script>
-                 </div>
                 {% endif %}
 
                 {{ obrazac.potvrda (placeholder="Potvrda lozinke", class="element")}}
                 {% if obrazac.potvrda.errors %}
-                <div>
                     <script>
                         $("[name='potvrda']").addClass("upozorenje");
                     </script>
-                 </div>
                 {% endif %}
-
                 {{ obrazac.submit (class="botun")}}
-
         </fieldset>
-
     </form>
 </div>
 {% endblock %}
