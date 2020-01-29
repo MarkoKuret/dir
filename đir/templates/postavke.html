@@ -54,21 +54,21 @@
     </form>
     
 
-    <label class="check">
-        <input id="check" value="zelim" type="checkbox"> Želim primati email obavijesti
-        <script>            
-            $("#check").change(function() {
-                var eobv = (this.checked) ? 1 : 0;
-                
-                if (eobv == 1) {
-                    $.post('/email_obavijest', {'obv' : 1})
-                }
-                else {
-                    $.post('/email_obavijest', {'obv' : 0})
-                }
-            })
-        </script>
-    </label>
+    
+    <input id="check" value="zelim" type="checkbox"> Želim primati email obavijesti
+    <script>            
+        $("#check").change(function() {
+            var eobv = (this.checked) ? 1 : 0;
+            
+            if (eobv == 1) {
+                $.post('/email_obavijest', {'obv' : 1})
+            }
+            else {
+                $.post('/email_obavijest', {'obv' : 0})
+            }
+        })
+    </script>
+    
 
     <div>
     {% if korisnik.eobv == True %}

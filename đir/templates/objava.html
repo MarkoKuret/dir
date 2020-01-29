@@ -19,6 +19,7 @@
         <div class="vrijeme">{{ objava.datum.strftime("%H:%M") }}</div>
 </div>
 
+
 <div id="prozor_izbriši" class="modal">
   <p>Sigurno želite izbrisati?</p>
   <a href="/izbriši/{{ objava.id }}" style="color: #F36B7F;">Nastavi</a>
@@ -29,18 +30,16 @@
 </div>
 
 {% if objava.admin.id == korisnik.id %}
-	<a href="#prozor_izbriši" rel="modal:open"><img class="mali_botun" src="/static/slike/kanta.svg" alt="Koš za smeće"><img></a>
-  <i class="material-icons">
-delete_outline
-</i>
-	<a href="#prozor_uredi" rel="modal:open"><img class="mali_botun" src="/static/slike/olovka.svg" alt="Olovka"><img></a>
- 
+	<a href="#prozor_izbriši" rel="modal:open"><i class="material-icons-round mali_botun">delete_outline</i></a>
+	<a href="#prozor_uredi" rel="modal:open"><i class="material-icons-round mali_botun">create</i></a>
 {% else %}
-  <a id="sudjeluj_botun" href="/sudionik/{{ objava.id }}/1"><img class="mali_botun v" src="/static/slike/dodaj.svg" alt="sudjeluj"><img></a>
-  <a style="display: none;" id="ne_sudjeluj_botun" href="/sudionik/{{ objava.id }}/0"><img class="mali_botun v" src="/static/slike/ukloni.svg" alt="sudjeluj"><img></a>
+
+  <a id="sudjeluj_botun" href="/sudionik/{{ objava.id }}/1"><i class="material-icons-round mali_botun p">person_add</i></a>
+  <a style="display: none;" id="ne_sudjeluj_botun" href="/sudionik/{{ objava.id }}/0">
+   <i class="material-icons-round mali_botun c">person_add_disabled</i></a>
 {% endif %}
 
-<div>
+<div id="opis_dog">
   <p>	<strong>Opis:</strong> {{ objava.opis }}</p>
   <p>	<strong>Autor:</strong> <a href="/korisnik/{{ objava.admin.id }}">{{ objava.admin.ime }}</a></p>
 
@@ -64,11 +63,11 @@ delete_outline
 
 
 <div> 
-  <i id="por-otvori" class="material-icons por-botun">message</i>  
+  <i id="por-otvori" class="material-icons-round por-botun">message</i>  
   <div class="por-prozor">
     <div class="por-vrh">
       Poruke
-      <span class="por-zatvori por-botun"><i class="material-icons">close</i></span>
+      <span class="por-zatvori por-botun"><i class="material-icons-round">close</i></span>
     </div>
     
       <div id="por-lista"> 
@@ -76,17 +75,22 @@ delete_outline
             <div class="por-autor">{{ objava.admin.ime }}</div>  
             <div class="por-text">{{ objava.mjesto }}, <br> {{ objava.sport }} - {{ objava.datum.strftime("%A, %d. (%B) u %H:%M sati").capitalize() }}</div>
           </div>
-        {% for poruka in poruke %}      
-          <div  class="por-oblak ja">      
+        {% for poruka in poruke %}
+          <div  class="por-oblak">      
             <div class="por-autor">{{ poruka.ime }}</div>  
             <div class="por-text">{{ poruka.tekst }}</div>
           </div>
+          {% if poruka.ime == korisnik.ime %}
+            <script>
+              $('.por-oblak:last').addClass("ja");
+            </script>    
+          {% endif %}  
         {% endfor %}
       </div>
     
     <div>      
         <input id="por-input" autocomplete="off" placeholder="Nova Poruka..."/>
-        <button id="por-salji"><i class="material-icons">send</i></button>      
+        <button id="por-salji"><i id="salji_ikona" class="material-icons-round">send</i></button>      
     </div>
 
   </div>

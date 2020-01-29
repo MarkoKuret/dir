@@ -17,8 +17,8 @@
           source: naselja,
           minLength: 2,
           change: function( event, ui ) {
-            val = $(this).val();
-            tocno = $.inArray(val, naselja);
+            naselje = $(this).val();
+            tocno = $.inArray(naselje, naselja);
             if (tocno < 0) {
                 $(this).val("");
                 return false;
@@ -30,7 +30,6 @@
 </head>
 
  
-
 <div class="kartice">
     {% for objava in objave %}
         {% include 'objava_kartica.html' %}
