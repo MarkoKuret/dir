@@ -113,6 +113,17 @@
      color: #F36B7F;
      display: inline;
 }
+
+.stranice{
+    text-align: center;
+    font-size: 3.5vmin;
+}
+
+.stranice a.odabran{
+    color: #434343;
+    font-size: 4.5vmin;
+}
+
 /*------navigacijska traka--------*/
  nav {
      text-align: right;

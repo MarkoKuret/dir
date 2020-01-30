@@ -31,9 +31,22 @@
 
  
 <div class="kartice">
-    {% for objava in objave %}
+    {% for objava in objave.items %}
         {% include 'objava_kartica.html' %}
     {% endfor %}
+    <div class="stranice">
+        {% for stranica in objave.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+          {% if stranica %}
+            {% if objave.page == stranica %}
+              <a class="odabran" href="/objave?stranica={{stranica}}">{{ stranica }}</a>
+            {% else %}
+              <a href="/objave?stranica={{stranica}}">{{ stranica }}</a>
+            {% endif %}
+          {% else %}
+            ...
+          {% endif %}
+        {% endfor %}
+    </div>
 </div>
 
 
@@ -43,7 +56,7 @@
 
 <div class="događaj">
     <h2 class="obrazac_botun otvori" >+ kreiraj događaj</h2>
-    <h2 class="obrazac_botun zatvori">&times zatvori</h2>
+    <h2 class="obrazac_botun zatvori">&times novi događaj</h2>
 
     <div class="obrazac_događaj">
         {% include 'obrazac_događaj.html' %}

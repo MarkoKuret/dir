@@ -2,8 +2,6 @@
 <form autocomplete="off" action="" method="post">
             {{ obrazac.hidden_tag() }}
             <fieldset class="obrazac">
-                <legend><h3>{{ naslov }}</h3></legend>
-
                     {{ obrazac.sport (autocomplete="off", placeholder="Sport", class="element")}}
                     {% if obrazac.sport.errors %}
                         <script>

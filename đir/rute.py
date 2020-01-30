@@ -70,7 +70,8 @@ def spremi(slika, korisnik, stari_avatar):
 
 def selektiraj():
     dat = (date.today() - timedelta(hours=1))
-    objave = Objava.query.filter(Objava.datum >= dat).order_by(Objava.datum).all()
+    stranica = request.args.get('stranica', 1, type=int)
+    objave = Objava.query.order_by(Objava.datum.desc()).filter(Objava.datum >= dat).order_by(Objava.datum).paginate(page=stranica, per_page=7)
     return objave
 
 @app.route("/", methods=["GET"])
@@ -134,7 +135,7 @@ def objave():
         
     objave = selektiraj()
     avatar = Korisnik.query.get(session.get("korisnik_id")).avatar
-    return render_template("objave.html", obrazac=obrazac, objave=objave, naslov="Novi događaj", avatar=avatar)
+    return render_template("objave.html", obrazac=obrazac, objave=objave, avatar=avatar)
 
 @app.route("/objave/<int:id>", methods=["GET", "POST"])
 @potrebna_prijava
@@ -155,7 +156,7 @@ def objava(id):
         obrazac.mjesto.data = objava.mjesto
         obrazac.datum.data = objava.datum
         obrazac.opis.data = objava.opis
-    return render_template('objava.html', poruke=poruke, objava=objava, obrazac=obrazac, naslov="Uredi", korisnik=Korisnik.query.get(session.get("korisnik_id")))
+    return render_template('objava.html', poruke=poruke, objava=objava, obrazac=obrazac, korisnik=Korisnik.query.get(session.get("korisnik_id")))
 
 
 @app.route('/poruka', methods=['POST'])
