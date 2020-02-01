@@ -91,7 +91,7 @@
               source: naselja,
               minLength: 2,
               change: function() {
-                naselje = $(this).val().charAt(0).toUpperCase() + $(this).val().slice(1).toLowerCase();
+                naselje = $(this).val().toLowerCase();
                 tocno = $.inArray(naselje, naselja);
                 if (tocno < 0) {
                     $(this).val("");
@@ -104,7 +104,7 @@
               source: sportovi,
               minLength: 2,
               change: function() {
-                sport = $(this).val().charAt(0).toUpperCase() + $(this).val().slice(1).toLowerCase();
+                sport = $(this).val().toLowerCase();
                 tocno = $.inArray(sport, sportovi);
                 if (tocno < 0) {
                     $(this).val("");

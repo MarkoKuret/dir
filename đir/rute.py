@@ -1,7 +1,7 @@
 from flask import render_template, request, session, flash, redirect, url_for, jsonify
 from đir import app, db, mail
 from đir.modeli import Korisnik, Objava, Poruka
-from đir.obrasci import Registracija, Prijava, ObjavaObrazac, Uredi, Zaboravljena_lozinka, Nova_lozinka
+from đir.obrasci import Registracija, Prijava, ObjavaObrazac, Uredi, Zaboravljena_lozinka, Nova_lozinka, Filter
 from werkzeug.security import check_password_hash, generate_password_hash
 from functools import wraps
 from datetime import datetime, date, timedelta
@@ -68,9 +68,17 @@ def spremi(slika, korisnik, stari_avatar):
 
     return avatar
 
-def selektiraj(mjesto_filter, sport_filter):
+def selektiraj():
     dat = (date.today() - timedelta(hours=1))
     stranica = request.args.get('stranica', 1, type=int)
+    mjesto_filter = None
+    sport_filter = None
+    try:
+        mjesto_filter = request.args.get("mjesto_filter").capitalize()
+        sport_filter = request.args.get("sport_filter").capitalize()
+    except:
+        pass
+    print(request.url)
     if mjesto_filter and sport_filter:
         objave = Objava.query.order_by(Objava.datum.desc()).filter(Objava.datum >= dat, Objava.mjesto == mjesto_filter, Objava.sport == sport_filter).order_by(Objava.datum).paginate(page=stranica, per_page=7)
     elif mjesto_filter:
@@ -129,6 +137,8 @@ def korisnik(id):
 @potrebna_prijava
 def objave():
     obrazac = ObjavaObrazac()
+    _filter = Filter()
+
     if obrazac.validate_on_submit():
         datum = datetime.strptime(obrazac.datum.data, "%Y/%m/%d %H:%M")
         objava = Objava(sport=obrazac.sport.data.capitalize(), mjesto=obrazac.mjesto.data.capitalize(), datum=datum, opis=obrazac.opis.data, korisnik_id=session["korisnik_id"])
@@ -139,11 +149,12 @@ def objave():
         pusher_client.trigger('objava-kanal', 'nova-objava', {'sport': objava.sport, 'mjesto': objava.mjesto, 'datum': datum, 'sat': sat, 'id': objava.id})
         flash('Kreirano', 'dobro')
         return redirect(url_for('objave'))
-    mjesto_filter = request.form.get('mjesto-filter')
-    sport_filter = request.form.get('sport-filter')
-    objave = selektiraj(mjesto_filter, sport_filter)
+    if _filter.validate_on_submit():
+        print(_filter.mjesto.data, _filter.sport.data)
+        return redirect(url_for('objave', mjesto_filter=_filter.mjesto.data, sport_filter=_filter.sport.data))
+    objave = selektiraj()
     avatar = Korisnik.query.get(session.get("korisnik_id")).avatar
-    return render_template("objave.html", obrazac=obrazac, objave=objave, avatar=avatar)
+    return render_template("objave.html", obrazac=obrazac, objave=objave, avatar=avatar, filter=_filter)
 
 @app.route("/objave/<int:id>", methods=["GET", "POST"])
 @potrebna_prijava

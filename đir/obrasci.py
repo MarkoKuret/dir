@@ -65,4 +65,7 @@ class Nova_lozinka(FlaskForm):
     potvrda = PasswordField('Potvrda lozinke', validators=[DataRequired(), EqualTo('lozinka')])
     submit = SubmitField('Potvrdi novu lozinku')
 
-        
+class Filter(FlaskForm):
+    sport = StringField('sport')
+    mjesto = StringField('mjesto')
+    submit = SubmitField('Traži')

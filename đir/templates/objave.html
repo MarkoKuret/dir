@@ -16,9 +16,9 @@
         {% for stranica in objave.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
           {% if stranica %}
             {% if objave.page == stranica %}
-              <a class="odabran" href="/objave?stranica={{stranica}}">{{ stranica }}</a>
+              <a class="odabran" href="{{ url_for('objave', stranica=stranica, mjesto_filter=request.args.get('mjesto_filter'), sport_filter=request.args.get('sport_filter')) }}">{{ stranica }}</a>
             {% else %}
-              <a href="/objave?stranica={{stranica}}">{{ stranica }}</a>
+              <a href="{{ url_for('objave', stranica=stranica, mjesto_filter=request.args.get('mjesto_filter'), sport_filter= request.args.get('sport_filter')) }}">{{ stranica }}</a>
             {% endif %}
           {% else %}
             ...
@@ -43,15 +43,25 @@
 
 
 <div id="filter"  style="text-align: center;"  class="modal">
-    <form action="" method="post">
-        <input name="mjesto-filter" type="text" class="element mjesto_input i" placeholder="Mjesto">
-        <input name="sport-filter" type="text" class="element sport_input i" placeholder="Sport">
-        <input id="filter_submit" type="submit" class="botun" value="Ukloni Filtere">
+    <form autocomplete="off" action="" method="post">
+            {{ filter.hidden_tag() }}
+            <fieldset class="obrazac">
+                    {{ filter.sport (autocomplete="off", placeholder="Sport", class="element sport_input")}}
+                    {% if filter.sport.errors %}
+                        <script>
+                            $("[name='sport']").addClass("upozorenje").val("");
+                        </script>
+                    {% endif %}
+
+                    {{ filter.mjesto (placeholder="Mjesto", autocomplete="off", class="element mjesto_input")}}
+                    {% if filter.mjesto.errors %}
+                        <script>
+                            $("[name='mjesto']").addClass("upozorenje");
+                        </script>
+                    {% endif %}
+                    {{ filter.submit (class="botun")}}
+            </fieldset>
     </form>
-    <script>             
-        $("input").change(function() {
-            $("#submit").val("Ažuriraj");});
-    </script>
 </div>
 
 <script>
