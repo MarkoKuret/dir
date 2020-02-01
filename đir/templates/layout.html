@@ -28,6 +28,13 @@
         <link href="/static/styles.css" rel="stylesheet">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
 
+        <!-- popis naselja i sportova-->
+        <script src="/static/naselja.json"></script>
+        <script src="/static/sportovi.json"></script>
+
+        <!--ikona (favicon)-->
+        <link rel="icon" type="image/png" sizes="32x32" href="/static/slike/favicon.ico">
+
         <title>Đir {% block title %}{% endblock %}</title>
     </head>
 
@@ -57,9 +64,6 @@
     </body>
 
     <script>
-        
-
-
         $(".birac_datuma").flatpickr({
             enableTime: true,
             minDate: "today",
@@ -81,10 +85,36 @@
         });
 
 
-    </script>
 
+        $( function() {
+            $( ".mjesto_input" ).autocomplete({
+              source: naselja,
+              minLength: 2,
+              change: function() {
+                naselje = $(this).val().charAt(0).toUpperCase() + $(this).val().slice(1).toLowerCase();
+                tocno = $.inArray(naselje, naselja);
+                if (tocno < 0) {
+                    $(this).val("");
+                    return false;
+                }
+             }
+            });
 
-    <script>
+            $( ".sport_input" ).autocomplete({
+              source: sportovi,
+              minLength: 2,
+              change: function() {
+                sport = $(this).val().charAt(0).toUpperCase() + $(this).val().slice(1).toLowerCase();
+                tocno = $.inArray(sport, sportovi);
+                if (tocno < 0) {
+                    $(this).val("");
+                    return false;
+                }
+             }
+            });
+
+        });
+    
         $(document).ready(function(){
         var pozadine = ["poz1", "poz2", "poz3", "poz4", "poz5", "poz6"];
 

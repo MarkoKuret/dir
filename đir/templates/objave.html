@@ -8,28 +8,6 @@
 
 {% block main %}
 
-
-<head>
-    <script>
-    {% include 'naselja.json' %}
-    $( function() {
-        $( ".mjesto_input" ).autocomplete({
-          source: naselja,
-          minLength: 2,
-          change: function( event, ui ) {
-            naselje = $(this).val();
-            tocno = $.inArray(naselje, naselja);
-            if (tocno < 0) {
-                $(this).val("");
-                return false;
-            }
-         }
-        });
-    });
-    </script>
-</head>
-
- 
 <div class="kartice">
     {% for objava in objave.items %}
         {% include 'objava_kartica.html' %}
@@ -57,26 +35,23 @@
 <div class="događaj">
     <h2 class="obrazac_botun otvori" >+ kreiraj događaj</h2>
     <h2 class="obrazac_botun zatvori">&times novi događaj</h2>
-
+    <a id="filter_ikona" href="#filter" rel="modal:open"><i class="material-icons-round">filter_list</i></a>
     <div class="obrazac_događaj">
         {% include 'obrazac_događaj.html' %}
     </div>
 </div>
 
-<div id="filter_lista">
-    <div style="display: none" class='filter'>
-        <select class="filter_element">
-            <option value='ranije'>datum ranije</option>
-            <option value='kasnije'>datum kasnije</option>
-        </select>
-        <input class="filter_element" id="naselje" type="text">
-    </div>
-    <script>
-    $('#filter_ikona').click(function() {
-        $('.filter').slideToggle('scale');
-    }); 
-    </script>
 
+<div id="filter"  style="text-align: center;"  class="modal">
+    <form action="" method="post">
+        <input name="mjesto-filter" type="text" class="element mjesto_input i" placeholder="Mjesto">
+        <input name="sport-filter" type="text" class="element sport_input i" placeholder="Sport">
+        <input id="filter_submit" type="submit" class="botun" value="Ukloni Filtere">
+    </form>
+    <script>             
+        $("input").change(function() {
+            $("#submit").val("Ažuriraj");});
+    </script>
 </div>
 
 <script>
@@ -100,18 +75,17 @@
                 <div class="vrijeme">${sat}</div>
 </a>`;
     
-    $('.kartice').append(objava_kartica)
+    $('.kartice').prepend(objava_kartica)
   }); 
 
 </script>
 
 <script>
-     
-
         $(".otvori").click(function() {
             $(".obrazac_događaj").show()
             $(this).hide();
             $(".zatvori").show();
+            $("#filter_ikona").hide();
             if ($(window).width() <= 1000) {  
                 $("main").hide();
        }     
@@ -123,6 +97,7 @@
             $(this).hide();
             $(".otvori").show();
             $("main").show();
+            $("#filter_ikona").show();
 });
 </script>
 

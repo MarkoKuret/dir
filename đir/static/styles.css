@@ -47,9 +47,7 @@
      color: gray;
      display: block;
 }
- #opis_dog {
-     margin-top: 100px;
-}
+
 /*---botuni, poruke, ikone i linkovi------*/
  a {
      -webkit-appearance: none;
@@ -159,9 +157,7 @@
      color: white !important;
      background-color: #9FBFFF !important;
 }
- legend{
-     margin: auto;
-}
+
  .obrazac{
      display: block;
      margin: auto;
@@ -171,6 +167,12 @@
      font-size: inherit;
      font-weight: 400;
 }
+
+.index_obrazac{
+    margin-top: 30px;
+}
+
+
  .upozorenje {
      border: solid #F36B7F !important;
 }
@@ -179,6 +181,7 @@
      display: block;
      border-radius: 50px;
      border-color: #434343;
+     border-style: solid;
      text-align: center;
      font-size: 20px;
      height: 25px;
@@ -222,6 +225,7 @@
  .obrazac_botun{
      cursor: pointer;
      margin-left: 20px;
+     display: inline-block;
 }
  .zatvori{
      display: none;
@@ -280,22 +284,17 @@
  .vrijeme, .datum{
      text-align: center;
 }
+
+ #opis_dog {
+    display: inline-block;
+}
 /*--filter lista--*/
- .filter_element {
-     -webkit-appearance: none;
-     border-width: 2px;
-     border-radius: 50px;
-     border-color: #434343;
-     text-align: center !important;
-     font-size: 20px;
-     padding-left: 15px;
-     padding-right: 15px;
-     height: 25px !important;
-     width: 150px;
+
+ #filter_ikona{
+    display: inline;
+    margin-left: 70px;
 }
- #filter_lista {
-     cursor: pointer;
-}
+
 /*-------kartice za poruke-------*/
  #por-otvori {
      position: fixed;
@@ -318,7 +317,7 @@
      right: 10px;
      bottom: 10px;
      width: 400px;
-     max-width: 80vw;
+     max-width: 90vw;
      max-height: 80vh;
      border-radius: 15px;
      background-color: white;
@@ -346,8 +345,9 @@
      position: relative;
      height:40px;
      padding: 10px;
-     overflow:hidden;
+     overflow: hidden;
 }
+
  #por-salji {
      position: absolute;
      bottom: 10px;
@@ -362,7 +362,6 @@
  #por-lista {
      padding: 15px;
      height: 330px;
-     overflow-y:scroll;
 }
  #por-lista::-webkit-scrollbar {
      width: 5px;
@@ -373,7 +372,7 @@
 }
  @media only screen and (max-width: 500px) {
      #por-lista {
-         height:40vh;
+         height:50vh;
     }
 }
  .por-text {
@@ -402,6 +401,17 @@
  .por-oblak.ja > .por-autor{
      float: right;
 }
+
+ .por-oblak.sustav{
+    text-align: center;
+}
+
+  .por-oblak.sustav > .por-text {
+    float: none;  
+    display: inline-block;
+    background-color: #9FBFFF;
+    color: white;
+}
 /*---pozadine za kartice---*/
  .poz1{
      background: linear-gradient(90deg, #FC466B 0%, #3F5EFB 100%);
@@ -429,6 +439,10 @@
          margin: 10px 0px;
          font-size: 30px;
     }
+    .index_obrazac{
+    margin-top: 80px;
+    }
+
 }
  @media only screen and (min-width: 600px) and (-webkit-max-device-pixel-ratio: 1.5) {
      body{
@@ -467,18 +481,18 @@
      .index {
          background-image: url(slike/index-md.png) !important;
     }
-     .kartice{
+     .kartice {
          margin-top: 50px;
          width: 55%;
     }
-     .događaj{
+     .događaj {
          float:right;
          width: 45%;
     }
 }
  @media screen and (min-width: 1400px){
      h1{
-         margin-top: 50px !important;
+         margin-top: 20vh !important;
     }
      h2{
          font-size: 40px !important;
@@ -491,6 +505,10 @@
          font-size: 30px;
          height: 35px;
          padding: 0px 10px;
+    }
+
+    #por-input{
+        font-size: 20px;
     }
 }
 /*----za vrlo visoku rezoluciju----*/

@@ -68,10 +68,17 @@ def spremi(slika, korisnik, stari_avatar):
 
     return avatar
 
-def selektiraj():
+def selektiraj(mjesto_filter, sport_filter):
     dat = (date.today() - timedelta(hours=1))
     stranica = request.args.get('stranica', 1, type=int)
-    objave = Objava.query.order_by(Objava.datum.desc()).filter(Objava.datum >= dat).order_by(Objava.datum).paginate(page=stranica, per_page=7)
+    if mjesto_filter and sport_filter:
+        objave = Objava.query.order_by(Objava.datum.desc()).filter(Objava.datum >= dat, Objava.mjesto == mjesto_filter, Objava.sport == sport_filter).order_by(Objava.datum).paginate(page=stranica, per_page=7)
+    elif mjesto_filter:
+        objave = Objava.query.order_by(Objava.datum.desc()).filter(Objava.datum >= dat, Objava.mjesto == mjesto_filter).order_by(Objava.datum).paginate(page=stranica, per_page=7)
+    elif sport_filter:
+        objave = Objava.query.order_by(Objava.datum.desc()).filter(Objava.datum >= dat, Objava.sport == sport_filter).order_by(Objava.datum).paginate(page=stranica, per_page=7)
+    else:
+        objave = Objava.query.order_by(Objava.datum.desc()).filter(Objava.datum >= dat).order_by(Objava.datum).paginate(page=stranica, per_page=7)
     return objave
 
 @app.route("/", methods=["GET"])
@@ -124,7 +131,7 @@ def objave():
     obrazac = ObjavaObrazac()
     if obrazac.validate_on_submit():
         datum = datetime.strptime(obrazac.datum.data, "%Y/%m/%d %H:%M")
-        objava = Objava(sport=obrazac.sport.data, mjesto=obrazac.mjesto.data, datum=datum, opis=obrazac.opis.data, korisnik_id=session["korisnik_id"])
+        objava = Objava(sport=obrazac.sport.data.capitalize(), mjesto=obrazac.mjesto.data.capitalize(), datum=datum, opis=obrazac.opis.data, korisnik_id=session["korisnik_id"])
         db.session.add(objava)
         db.session.commit()
         datum = objava.datum.strftime("%a, %d.").capitalize()
@@ -132,8 +139,9 @@ def objave():
         pusher_client.trigger('objava-kanal', 'nova-objava', {'sport': objava.sport, 'mjesto': objava.mjesto, 'datum': datum, 'sat': sat, 'id': objava.id})
         flash('Kreirano', 'dobro')
         return redirect(url_for('objave'))
-        
-    objave = selektiraj()
+    mjesto_filter = request.form.get('mjesto-filter')
+    sport_filter = request.form.get('sport-filter')
+    objave = selektiraj(mjesto_filter, sport_filter)
     avatar = Korisnik.query.get(session.get("korisnik_id")).avatar
     return render_template("objave.html", obrazac=obrazac, objave=objave, avatar=avatar)
 
@@ -200,7 +208,7 @@ def sudionik(id, status):
     return redirect(request.referrer)
 
 def sudionik_mail(sudionik, objava, status):
-    poruka = Message('Novi sudionik',
+    poruka = Message('Promijena sudionika',
                   sender='dirmreza@gmail.com',
                   recipients=[objava.admin.email])
     if status == 1:

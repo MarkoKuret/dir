@@ -4,7 +4,7 @@
     - {{ objava.sport }}/{{ objava.mjesto }}
 {% endblock %}
 
-{% block botun %}<a href="/odjava"><span>odjava</span></a>{% endblock %}
+{% block botun %}<a href="/postavke"><img class="okrugla_slika" src="/static/avatari/{{ korisnik.avatar }}"></a>{% endblock %}
 
 {% block main %}
 <br>
@@ -14,7 +14,7 @@
 
 <div class="kartica">
         <div class="grad">{{ objava.mjesto }}</div>
-        <div class="datum">{{ objava.datum.strftime("%b - %a, %d.").capitalize() }}</div>
+        <div class="datum">{{ objava.datum.strftime("%b-%a, %d.").capitalize() }}</div>
         <div class="sport">{{ objava.sport }}</div>
         <div class="vrijeme">{{ objava.datum.strftime("%H:%M") }}</div>
 </div>
@@ -71,8 +71,7 @@
     </div>
     
       <div id="por-lista"> 
-        <div class="por-oblak">      
-            <div class="por-autor">{{ objava.admin.ime }}</div>  
+        <div class="por-oblak sustav">      
             <div class="por-text">{{ objava.mjesto }}, <br> {{ objava.sport }} - {{ objava.datum.strftime("%A, %d. (%B) u %H:%M sati").capitalize() }}</div>
           </div>
         {% for poruka in poruke %}
@@ -148,15 +147,18 @@ $(function() {
         $('#nema_sud').hide()
       }
       $('#sudionici').append(korisnik)
-      $('#por-lista').append(`<div  class="por-oblak">      
-                           <div class="por-autor">đir.com</div>  
+      $('#por-lista').append(`<div  class="por-oblak sustav">        
                            <div class="por-text">Korisnik ${ime} se pridružio</div>
                        </div>`)
       $('#por-lista').scrollTop($('#por-lista')[0].scrollHeight);
     }
     else {
-      var makni = $("#sudionici").find(`#${id}`)
-      makni.remove()
+      var ukloni = $("#sudionici").find(`#${id}`)
+      ukloni.remove()
+      $('#por-lista').append(`<div  class="por-oblak sustav">        
+                           <div class="por-text">Korisnik ${ime} je napustio događaj</div>
+                       </div>`)
+      $('#por-lista').scrollTop($('#por-lista')[0].scrollHeight);
       if ({{ objava.sudionici }}.length == 0){
         $('#nema_sud').show()}
     }
@@ -166,17 +168,12 @@ $(function() {
 
 </script>
 
-
-
 <script>
-                               
-
   $(".por-botun").click(function() {    
     $("#por-otvori").toggle('scale');
     $(".por-prozor").toggle('scale');
     $('#por-lista').scrollTop($('#por-lista')[0].scrollHeight);
   })
-
 </script>
 
 {% endblock %}
