@@ -4,19 +4,18 @@
     - {{ objava.sport }}/{{ objava.mjesto }}
 {% endblock %}
 
+{% block link %}<a id="naslov_nazad" href="/">&#8249;</a>{% endblock %}
 {% block botun %}<a href="/postavke"><img class="okrugla_slika" src="/static/avatari/{{ korisnik.avatar }}"></a>{% endblock %}
 
 {% block main %}
 <br>
-
-
-
-
 <div class="kartica">
         <div class="grad">{{ objava.mjesto }}</div>
         <div class="datum">{{ objava.datum.strftime("%b-%a, %d.").capitalize() }}</div>
         <div class="sport">{{ objava.sport }}</div>
         <div class="vrijeme">{{ objava.datum.strftime("%H:%M") }}</div>
+        <div class="broj">{{ objava.sudionici|length }}</div>
+</a>
 </div>
 
 
@@ -62,7 +61,7 @@
 
 
 
-<div> 
+ 
   <i id="por-otvori" class="material-icons-round por-botun">message</i>  
   <div class="por-prozor">
     <div class="por-vrh">
@@ -87,13 +86,13 @@
         {% endfor %}
       </div>
     
-    <div>      
+    <div id="poruka-linija">      
         <input id="por-input" autocomplete="off" placeholder="Nova Poruka..."/>
         <button id="por-salji"><i id="salji_ikona" class="material-icons-round">send</i></button>      
     </div>
 
   </div>
-</div>
+
 
 
 <script>
@@ -132,8 +131,18 @@ $(function() {
                            <div class="por-text">${poruka}</div>
                        </div>`;
     $('#por-lista').append(poruka_oblak)
-    $('#por-lista').scrollTop($('#por-lista')[0].scrollHeight);
-  }); 
+    $('#por-lista').stop().animate({ scrollTop: $('#por-lista')[0].scrollHeight}, 1000);
+  });
+});
+</script>
+
+<script>
+$(function() {
+
+  var pusher = new Pusher('43251c740e8c7fdc4747', {
+    cluster: 'eu',
+    forceTLS: true
+  });
 
   var kanal2 = pusher.subscribe('sudionik-kanal');
   kanal2.bind('promjena-sudionika', function(data) {
@@ -150,7 +159,7 @@ $(function() {
       $('#por-lista').append(`<div  class="por-oblak sustav">        
                            <div class="por-text">Korisnik ${ime} se pridružio</div>
                        </div>`)
-      $('#por-lista').scrollTop($('#por-lista')[0].scrollHeight);
+      $('#por-lista').stop().animate({ scrollTop: $('#por-lista')[0].scrollHeight}, 1000);
     }
     else {
       var ukloni = $("#sudionici").find(`#${id}`)
@@ -158,21 +167,19 @@ $(function() {
       $('#por-lista').append(`<div  class="por-oblak sustav">        
                            <div class="por-text">Korisnik ${ime} je napustio događaj</div>
                        </div>`)
-      $('#por-lista').scrollTop($('#por-lista')[0].scrollHeight);
+      $('#por-lista').stop().animate({ scrollTop: $('#por-lista')[0].scrollHeight}, 1000);
       if ({{ objava.sudionici }}.length == 0){
         $('#nema_sud').show()}
     }
   }); 
-      
 });
-
 </script>
 
 <script>
   $(".por-botun").click(function() {    
     $("#por-otvori").toggle('scale');
     $(".por-prozor").toggle('scale');
-    $('#por-lista').scrollTop($('#por-lista')[0].scrollHeight);
+    $('#por-lista').stop().animate({ scrollTop: $('#por-lista')[0].scrollHeight}, 1000);
   })
 </script>
 

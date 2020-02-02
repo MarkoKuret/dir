@@ -66,6 +66,6 @@ class Nova_lozinka(FlaskForm):
     submit = SubmitField('Potvrdi novu lozinku')
 
 class Filter(FlaskForm):
-    sport = StringField('sport')
-    mjesto = StringField('mjesto')
-    submit = SubmitField('Traži')
+    f_sport = StringField('sport')
+    f_mjesto = StringField('mjesto')
+    f_submit = SubmitField('Traži')

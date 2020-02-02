@@ -18,7 +18,6 @@ pusher_client = pusher.Pusher(
   ssl=True
 )
 
-
 @app.after_request
 def after_request(response):
     response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate, max-age=0"
@@ -146,12 +145,11 @@ def objave():
         db.session.commit()
         datum = objava.datum.strftime("%a, %d.").capitalize()
         sat = objava.datum.strftime("%H:%M")
-        pusher_client.trigger('objava-kanal', 'nova-objava', {'sport': objava.sport, 'mjesto': objava.mjesto, 'datum': datum, 'sat': sat, 'id': objava.id})
+        pusher_client.trigger('objava-kanal', 'nova-objava', {'sport': objava.sport, 'mjesto': objava.mjesto, 'datum': datum, 'sat': sat, 'id': objava.id, 'broj': len(objava.sudionici)})
         flash('Kreirano', 'dobro')
         return redirect(url_for('objave'))
     if _filter.validate_on_submit():
-        print(_filter.mjesto.data, _filter.sport.data)
-        return redirect(url_for('objave', mjesto_filter=_filter.mjesto.data, sport_filter=_filter.sport.data))
+        return redirect(url_for('objave', mjesto_filter=_filter.f_mjesto.data, sport_filter=_filter.f_sport.data))
     objave = selektiraj()
     avatar = Korisnik.query.get(session.get("korisnik_id")).avatar
     return render_template("objave.html", obrazac=obrazac, objave=objave, avatar=avatar, filter=_filter)
@@ -164,12 +162,13 @@ def objava(id):
     poruke = Poruka.query.filter_by(objava_id=id)
     
     if obrazac.validate_on_submit():
-        objava.sport = obrazac.sport.data
-        objava.mjesto = obrazac.mjesto.data
+        objava.sport = obrazac.sport.data.capitalize()
+        objava.mjesto = obrazac.mjesto.data.capitalize()
         objava.datum = datetime.strptime(obrazac.datum.data, "%Y/%m/%d %H:%M")
         objava.opis = obrazac.opis.data
         db.session.commit()
         flash('Ažurirano', 'dobro')
+        return redirect(url_for('objava', id=id))
     if request.method == 'GET':
         obrazac.sport.data = objava.sport
         obrazac.mjesto.data = objava.mjesto
@@ -181,23 +180,21 @@ def objava(id):
 @app.route('/poruka', methods=['POST'])
 @potrebna_prijava
 def poruka():
-
+    print('poruka')
     try:
-
         ime = request.form.get('ime')
         poruka = request.form.get('poruka')
-        id = request.form.get('id')
+        _id = request.form.get('id')
 
-        nova_poruka = Poruka(tekst=poruka, ime=ime, objava_id=id)
+        nova_poruka = Poruka(tekst=poruka, ime=ime, objava_id=_id)
         db.session.add(nova_poruka)
         db.session.commit()
 
-        pusher_client.trigger('poruka-kanal'+id, 'nova-poruka', {'poruka': poruka, 'ime': ime})
+        pusher_client.trigger('poruka-kanal'+_id, 'nova-poruka', {'poruka': poruka, 'ime': ime})
 
+        return jsonify({'result' : 'success'})
     except:
-
-        return jsonify({'poruka' : 'greska'})
-
+        return jsonify({'result' : 'failure'})
     return ''
 
 @app.route("/sudionik/<int:id>/<int:status>")

@@ -115,6 +115,7 @@
 .stranice{
     text-align: center;
     font-size: 3.5vmin;
+    letter-spacing: 4px;
 }
 
 .stranice a.odabran{
@@ -130,14 +131,20 @@
  nav a{
      text-decoration: none;
 }
- nav a:first-child {
-     float: left;
-     font-weight: 800;
-     font-size: 12vmin;
-     color: #434343;
+#naslov {
+    float: left;
+    font-weight: 800;
+    font-size: 12vmin;
+    color: #434343;
 }
- nav a img {
+#naslov_nazad{
+    color: #434343;
+    font-size: 7vmin;
+    margin-right: 7px;
+    font-weight: 400;
+    float: left;
 }
+
  nav a span{
      background-color: #434343;
      color: #fff;
@@ -156,6 +163,7 @@
  .ui-menu-item {
      color: white !important;
      background-color: #9FBFFF !important;
+     text-transform: capitalize;
 }
 
  .obrazac{
@@ -200,7 +208,7 @@
      display: none;
      overflow: hidden;
 }
- #sport, .mjesto_input{
+ .sport_input, .mjesto_input{
      text-transform: capitalize;
 }
 /* Safari 4.0 - 8.0 */
@@ -245,6 +253,8 @@
      font-weight: 600;
      padding: 10px 30px 10px 30px;
 }
+
+
  .korisnik_kartica{
      overflow: hidden;
      border: none;
@@ -310,8 +320,7 @@
      padding: 15px;
 }
  .por-prozor {
-     display:none;
-     overflow: hidden;
+     display: none;
      font-size: 20px;
      position:fixed;
      right: 10px;
@@ -331,6 +340,8 @@
      margin-right: 15px;
 }
  .por-vrh {
+     border-top-right-radius: 15px;
+     border-top-left-radius: 15px; 
      background: #434343;
      color: white;
      text-align:center;
@@ -341,11 +352,15 @@
  #por-input {
      border: none;
      background: lightgray;
-     width:100%;
+     width: 100%;
      position: relative;
      height:40px;
      padding: 10px;
      overflow: hidden;
+}
+
+#poruka-linija{
+    overflow: hidden;
 }
 
  #por-salji {
@@ -355,13 +370,15 @@
      width: 40px;
      height: 40px;
      background: transparent;
-     box-shadow: none;
      border: none;
      color:#434343;
 }
+
  #por-lista {
      padding: 15px;
-     height: 330px;
+     height: 400px;
+     overflow-x: hidden;
+     overflow-y: scroll;
 }
  #por-lista::-webkit-scrollbar {
      width: 5px;
@@ -391,6 +408,7 @@
 }
  .por-oblak {
      clear:both;
+     overflow-wrap: break-word;
 }
  .por-oblak.ja > .por-text {
      float:right;
@@ -417,7 +435,7 @@
      background: linear-gradient(90deg, #FC466B 0%, #3F5EFB 100%);
 }
  .poz2{
-     background: linear-gradient(90deg, #1CB5E0 0%, #000851 100%);
+    background: linear-gradient(90deg, #00d2ff 0%, #3a47d5 100%);
 }
  .poz3{
      background: linear-gradient(90deg, #FDBB2D 0%, #22C1C3 100%);
@@ -430,6 +448,12 @@
 }
  .poz6{
      background: linear-gradient(90deg, #0700b8 0%, #00ff88 100%);
+}
+ .poz7{
+    background: linear-gradient(90deg, #9ebd13 0%, #008552 100%);
+}
+.poz8{
+    background: linear-gradient(90deg, rgba(210,50,42,1) 0%, rgba(179,23,201,0.9528186274509804) 100%);
 }
  @media only screen and (min-width: 700px) {
      .modal{
@@ -454,7 +478,7 @@
      h2{
          font-size: 35px !important;
     }
-     nav a:first-child {
+     #naslov{
          font-size: 60px !important;
     }
      .okrugla_slika {
@@ -473,9 +497,9 @@
          font-size: 50px !important;
     }
      h2{
-         font-size: 50px !important;
+         font-size: 37px !important;
     }
-     nav a:first-child {
+     #naslov {
          font-size: 70px !important;
     }
      .index {
@@ -490,12 +514,18 @@
          width: 45%;
     }
 }
+ @media screen and (max-width: 1400px){
+     .broj{
+        display: none;
+    }
+ }
+
  @media screen and (min-width: 1400px){
      h1{
          margin-top: 20vh !important;
     }
      h2{
-         font-size: 40px !important;
+         font-size: 45px !important;
     }
      .index {
          background-image: url(slike/index.png) !important;
@@ -510,6 +540,19 @@
     #por-input{
         font-size: 20px;
     }
+     .kartica{
+         grid-template-columns: 50% 40% 10%;
+         grid-template-rows: auto auto;
+         padding: 10px 30px 10px 30px;
+    }
+    .broj{
+        display: initial;
+     grid-column-start: 3;
+     grid-column-end: 4;
+     grid-row-start: 1;
+     grid-row-end: 3;
+     margin: auto;
+}
 }
 /*----za vrlo visoku rezoluciju----*/
  @media screen and (min-width: 3000px){

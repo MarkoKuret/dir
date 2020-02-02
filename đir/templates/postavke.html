@@ -4,12 +4,11 @@
     - Postavke
 {% endblock %}
 
+{% block link %}<a id="naslov_nazad" href="{{request.referrer}}">&#8249;</a>{% endblock %}
 {% block botun %}<a href="/odjava"><span>odjava</span></a>{% endblock %}
 
 {% block main %}
 <div class="kartice">
-	
-		
 		<form class="korisnik_kartica" action="" method="POST" enctype="multipart/form-data">
         {{ obrazac.hidden_tag() }}
         <img id="korisnik_slika" class="okrugla_slika korisnik_element" src="/static/avatari/{{ korisnik.avatar }}">

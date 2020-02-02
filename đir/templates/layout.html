@@ -40,7 +40,7 @@
 
     <body>
         <nav>
-            <!--dateFormat: "D, j, M, H:i",-->
+            {% block link %}{% endblock %}
             <a id="naslov" href="/">đir</a>
             {% block botun %}{% endblock %}
         </nav>
@@ -116,10 +116,10 @@
         });
     
         $(document).ready(function(){
-        var pozadine = ["poz1", "poz2", "poz3", "poz4", "poz5", "poz6"];
+        var pozadine = ["poz1", "poz2", "poz3", "poz4", "poz5", "poz6", "poz7", "poz8"];
 
         $(".kartica").each(function(){
-            $(this).addClass(pozadine[~~(Math.random()*6)]);
+            $(this).addClass(pozadine[~~(Math.random()*8)]);
         });
     });
     </script>

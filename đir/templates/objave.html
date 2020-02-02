@@ -46,22 +46,12 @@
     <form autocomplete="off" action="" method="post">
             {{ filter.hidden_tag() }}
             <fieldset class="obrazac">
-                    {{ filter.sport (autocomplete="off", placeholder="Sport", class="element sport_input")}}
-                    {% if filter.sport.errors %}
-                        <script>
-                            $("[name='sport']").addClass("upozorenje").val("");
-                        </script>
-                    {% endif %}
-
-                    {{ filter.mjesto (placeholder="Mjesto", autocomplete="off", class="element mjesto_input")}}
-                    {% if filter.mjesto.errors %}
-                        <script>
-                            $("[name='mjesto']").addClass("upozorenje");
-                        </script>
-                    {% endif %}
-                    {{ filter.submit (class="botun")}}
+                    {{ filter.f_sport (autocomplete="off", placeholder="Sport", class="element sport_input")}}
+                    {{ filter.f_mjesto (placeholder="Mjesto", autocomplete="off", class="element mjesto_input")}}
+                    {{ filter.f_submit (class="botun")}}
             </fieldset>
     </form>
+    <a href="{{ url_for('objave') }}"><small>Ukloni filtere</small></a>
 </div>
 
 <script>
@@ -75,15 +65,16 @@
     let sport = data.sport;
     let mjesto = data.mjesto;
     let datum = data.datum;
-    let id = data.id
-    let sat = data.sat
+    let id = data.id;
+    let sat = data.sat;
+    let broj = data.broj;
     
     let objava_kartica = `<a href="/objave/${id}" class="kartica povecaj poz1">
                 <div class="grad">${mjesto}</div>
                 <div class="datum">${datum}</div>
                 <div class="sport">${sport}</div>
                 <div class="vrijeme">${sat}</div>
-</a>`;
+                <div class="broj">${broj}</div></a>`;
     
     $('.kartice').prepend(objava_kartica)
   }); 
@@ -98,8 +89,7 @@
             $("#filter_ikona").hide();
             if ($(window).width() <= 1000) {  
                 $("main").hide();
-       }     
-            
+            }            
 });
 
         $(".zatvori").click(function() {
