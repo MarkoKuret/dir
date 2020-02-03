@@ -1,5 +1,5 @@
 
-<form autocomplete="off" action="" method="post">
+<form id="dog" autocomplete="off" action="" method="post">
             {{ obrazac.hidden_tag() }}
             <fieldset class="obrazac">
                     {{ obrazac.sport (autocomplete="off", placeholder="Sport", class="element sport_input")}}
@@ -35,5 +35,15 @@
                     {% endif %}
 
                     {{ obrazac.submit (class="botun")}}
+                    <div id="p" style="display: none;" class="botun">...</div>
+
             </fieldset>
+            <script>
+                $("#submit").click(function() {
+                    $('#dog').submit(function(){
+                    $("#submit").hide();
+                    $("#p").show();
+                    });
+                });
+            </script>
         </form>

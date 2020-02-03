@@ -1,6 +1,7 @@
 from đir import db, app
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
+#tablica koja spaja sudionike i objave (many to many)
 spojka = db.Table("spojka", 
     db.Column("korisnik_id", db.Integer, db.ForeignKey('korisnik.id')),
     db.Column("objava_id", db.Integer, db.ForeignKey('objava.id'))
@@ -17,10 +18,12 @@ class Korisnik(db.Model):
     objave = db.relationship("Objava", backref="admin", lazy=True)
     sudionik = db.relationship("Objava", secondary="spojka", backref="sudionici", lazy=True)
 
+    #funkcija koja generira vremenski osjetljivi token za reset lozinke
     def nabavi_token(self, trajanje=2000):
         t = Serializer(app.config['SECRET_KEY'], trajanje)
         return t.dumps({'korisnik_id': self.id}).decode('utf-8')
 
+    #provjera tokena
     @staticmethod
     def potvrdi_token(token):
         t = Serializer(app.config['SECRET_KEY'])
@@ -34,21 +37,25 @@ class Korisnik(db.Model):
     def __repr__(self):
         return f"Korisnik('{self.ime}', '{self.email}')"
 
-
+#događaji ili objave
 class Objava(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     sport = db.Column(db.String(20), nullable=False)
     mjesto = db.Column(db.String(20), nullable=False)
     datum = db.Column(db.DateTime, nullable=False)
     opis = db.Column(db.Text, nullable=False)
+    #korisnik koji je autor
     korisnik_id = db.Column(db.Integer, db.ForeignKey('korisnik.id'), nullable=False)
+    #relationship s porukama
     poruke = db.relationship('Poruka', backref="objava", lazy=True)
 
     def __repr__(self):
         return f"Korisnik('{self.sport}', '{self.mjesto}')"
 
+#poruke unutar događaja
 class Poruka(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     tekst = db.Column(db.String(177), nullable=False)
     ime = db.Column(db.String(20), nullable=False)
+    #id objave
     objava_id = db.Column(db.Integer, db.ForeignKey('objava.id'), nullable=False)
